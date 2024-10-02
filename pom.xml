@@ -70,7 +70,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-			<finalName>5Arctic-G1-StationSKI<finalName>
+			<finalName>5Arctic-G1-StationSKI</finalName>
 	</build>
 
 </project>
