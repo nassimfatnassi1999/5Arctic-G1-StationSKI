@@ -71,5 +71,6 @@
 			</plugin>
 		</plugins>
 	</build>
+	<finalName>5Arctic-G1-StationSKI<finalName>
 
 </project>
