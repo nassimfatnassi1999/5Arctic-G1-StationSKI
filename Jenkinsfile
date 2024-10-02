@@ -6,7 +6,6 @@ pipeline {
             steps {
                 echo 'Pulling from Git...'
                 git branch: 'SamaaliMedAchref-G1-StationSKI',
-',
                     url: 'https://github.com/nassimfatnassi1999/5Arctic-G1-StationSKI.git'
             }
         }
