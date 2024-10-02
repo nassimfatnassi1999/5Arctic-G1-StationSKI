@@ -14,10 +14,10 @@ pipeline {
         stage('Compile') {
             steps {
                 script {
-                dir('timesheet-devops'){
+
                     sh 'mvn clean compile'
                     }
-                }
+
             }
         }
     }
