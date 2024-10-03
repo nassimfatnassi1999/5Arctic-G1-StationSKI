@@ -16,17 +16,9 @@ pipeline {
             }
         }
 
-        stage('Clean package') {
+         stage('Build') {
             steps {
-                // Clean and package dependencies
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Compile') {
-            steps {
-                // Compile the code
-                sh 'mvn compile'
+                sh 'mvn clean compile'
             }
         }
 
