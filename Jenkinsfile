@@ -17,7 +17,7 @@ pipeline {
                 )
             }
         }
-        stage('Clean Install') {
+        stage('Clean package') {
             steps {
                 // Clean and install dependencies
                 sh 'mvn clean package'
