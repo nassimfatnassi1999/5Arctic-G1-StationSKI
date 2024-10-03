@@ -33,7 +33,7 @@ pipeline {
         stage('Static Analysis') {
           agent { label 'agent1' } // Specify the agent1 for this stage
              environment {
-               SONAR_URL = "http://192.168.33.11:9090/"
+               SONAR_URL = "http://192.168.33.11:9000/"
             }
             steps {
                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_AUTH_TOKEN')]) {
