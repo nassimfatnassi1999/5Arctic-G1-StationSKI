@@ -4,12 +4,6 @@ pipeline {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
-
-    environment {
-        // SonarQube environment (replace with your SonarQube server name)
-        SONARQUBE_ENV = 'sonarqube'
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -38,12 +32,13 @@ pipeline {
 
         stage('Static Analysis') {
           agent { label 'agent1' } // Specify the agent1 for this stage
-            steps {
-                // Perform SonarQube analysis
-                withSonarQubeEnv('sonarqube') { // Make sure the name matches your SonarQube configuration
-                    sh 'mvn sonar:sonar'
-                }
+             environment {
+               SONAR_URL = "http://192.168.33.11:9090/"
             }
+            steps {
+               withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_AUTH_TOKEN')]) {
+               sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+        }
         }
 
         stage('Quality Gate') {
