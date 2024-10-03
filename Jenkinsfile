@@ -40,4 +40,20 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            script {
+                // Envoyer un message à Slack
+                slackSend(channel: '#jenkins-messg', 
+                          message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} !")
+            }
+        }
+        failure {
+            script {
+                // Envoyer un message à Slack en cas d'échec
+                slackSend(channel: '#jenkins-messg', 
+                          message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
+            }
+        }
+    }
 }
