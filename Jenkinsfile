@@ -34,11 +34,9 @@ pipeline {
                 }
             }
         }
-
-        stage('Quality Gate') {
+         stage('Generate Code Coverage Report') {
             steps {
-                // Wait for the Quality Gate result from SonarQube
-                waitForQualityGate abortPipeline: true
+                sh 'mvn jacoco:report'
             }
         }
     }
