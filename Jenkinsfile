@@ -29,7 +29,8 @@ pipeline {
             }
             steps {
                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_AUTH_TOKEN')]) {
-               sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+               sh 'mvn clean install sonar:sonar -Dsonar.login=**** -Dsonar.host.url=${SONAR_URL} -Dsonar.java.binaries=target/classes'
+
         }
         }
         }
