@@ -40,7 +40,7 @@ pipeline {
                sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
         }
         }
-
+        }
         stage('Quality Gate') {
             steps {
                 // Wait for the Quality Gate result from SonarQube
