@@ -50,15 +50,20 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Cleaning up...'
-            cleanWs()
+            success {
+                script {
+                    // Send a success message to Slack
+                    slackSend(channel: '#jenkins-achref',
+                              message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} !")
+                }
+            }
+            failure {
+                script {
+                    // Send a failure message to Slack
+                    slackSend(channel: '#jenkins-achref',
+                              message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
+                }
+            }
         }
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
-    }
+
 }
