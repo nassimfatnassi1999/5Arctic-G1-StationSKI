@@ -41,52 +41,48 @@ pipeline {
             }
         }
 
-      
-    stage('Upload to Nexus') {
-        agent { label 'agent1' } // Use agent1 for the Nexus upload
-    steps {
-        script {
-            echo "Deploying to Nexus..."
+        stage('Upload to Nexus') {
+            agent { label 'agent1' } // Use agent1 for the Nexus upload
+            steps {
+                script {
+                    echo "Deploying to Nexus..."
 
-            nexusArtifactUploader(
-                nexusVersion: 'nexus3',
-                protocol: 'http',
-                nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
-                groupId: 'tn.esprit.spring',
-                artifactId: 'gestion-station-ski',
-                version: '1.0',
-                repository: "maven-central-repository", // Based on previous Nexus repo
-                credentialsId: "nexus-credentials", // Using your stored Nexus credentials
-                artifacts: [
-                    [
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
+                        groupId: 'tn.esprit.spring',
                         artifactId: 'gestion-station-ski',
-                        classifier: '',
-                        file: 'target/5Arctic-G1-StationSKI.jar', 
-                        type: 'jar'
-                    ]
-                ]
-            )
+                        version: '1.0',
+                        repository: "maven-central-repository", // Based on previous Nexus repo
+                        credentialsId: "nexus-credentials", // Using your stored Nexus credentials
+                        artifacts: [
+                            [
+                                artifactId: 'gestion-station-ski',
+                                classifier: '',
+                                file: 'target/5Arctic-G1-StationSKI.jar', 
+                                type: 'jar'
+                            ]
+                        ]
+                    )
 
-            echo "Deployment to Nexus completed!"
+                    echo "Deployment to Nexus completed!"
+                }
+            }
         }
-    }
-}
-
-}
-
     }
 
     post {
         success {
             script {
-                // Envoyer un message à Slack
+                // Send a success message to Slack
                 slackSend(channel: '#jenkins-messg', 
                           message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} !")
             }
         }
         failure {
             script {
-                // Envoyer un message à Slack en cas d'échec
+                // Send a failure message to Slack
                 slackSend(channel: '#jenkins-messg', 
                           message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
             }
