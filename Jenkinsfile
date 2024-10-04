@@ -34,13 +34,14 @@ pipeline {
                 }
             }
         }
-         stage('Generate Code Coverage Report') {
+
+        stage('Generate Code Coverage Report') {
             steps {
                 sh 'mvn jacoco:report'
             }
         }
-    }
-    stage('Upload to Nexus') {
+
+        stage('Upload to Nexus') {  // Move this stage inside stages
             agent { label 'agent1' } // Use agent1 for the Nexus upload
             environment {
                 NEXUS_URL = 'http://192.168.33.11:9001/repository' // Nexus repository base URL
@@ -58,11 +59,13 @@ pipeline {
                     sh """
                     curl -v -u ${NEXUS_CREDENTIALS_USR}:${NEXUS_CREDENTIALS_PSW} \
                     --upload-file ${artifactPath} \
-                    ${NEXUS_URL}/repository/${NEXUS_REPOSITORY}/${GROUP_ID.replace('.','/')}/${ARTIFACT_ID}/${ARTIFACT_VERSION}/${ARTIFACT_ID}-${ARTIFACT_VERSION}.jar
+                    ${NEXUS_URL}/${NEXUS_REPOSITORY}/${GROUP_ID.replace('.','/')}/${ARTIFACT_ID}/${ARTIFACT_VERSION}/${ARTIFACT_ID}-${ARTIFACT_VERSION}.jar
                     """
                 }
             }
         }
+    }
+
     post {
         success {
             script {
