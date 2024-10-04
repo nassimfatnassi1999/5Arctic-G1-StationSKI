@@ -41,34 +41,37 @@ pipeline {
             }
         }
 
-        stage('Upload to Nexus') {
-    agent { label 'agent1' } // Use agent1 for the Nexus upload
-    environment {
-        NEXUS_URL = 'http://192.168.33.11:9001/repository' // Nexus repository base URL
-        NEXUS_REPOSITORY = 'maven-central-repository' // Repository ID in Nexus
-        ARTIFACT_VERSION = '1.0' // Define your artifact version
-        GROUP_ID = 'tn.esprit.spring' // Your groupId
-        ARTIFACT_ID = 'gestion-station-ski' // Your artifactId
-    }
+      
+    stage('Upload to Nexus') {
+        agent { label 'agent1' } // Use agent1 for the Nexus upload
     steps {
         script {
-            def artifactPath = "target/${ARTIFACT_ID}-${ARTIFACT_VERSION}.jar"
-            
-            // Check if the artifact file exists
-            if (!fileExists(artifactPath)) {
-                error "Artifact ${artifactPath} does not exist."
-            }
+            echo "Deploying to Nexus..."
 
-            // Use Nexus credentials securely
-            withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                sh """
-                curl -v -u $NEXUS_USERNAME:$NEXUS_PASSWORD \
-                --upload-file ${artifactPath} \
-                ${NEXUS_URL}/${NEXUS_REPOSITORY}/${GROUP_ID.replace('.', '/')}/${ARTIFACT_ID}/${ARTIFACT_VERSION}/${ARTIFACT_ID}-${ARTIFACT_VERSION}.jar
-                """
-            }
+            nexusArtifactUploader(
+                nexusVersion: 'nexus3',
+                protocol: 'http',
+                nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
+                groupId: 'tn.esprit.spring',
+                artifactId: 'gestion-station-ski',
+                version: '1.0',
+                repository: "maven-central-repository", // Based on previous Nexus repo
+                credentialsId: "nexus-credentials", // Using your stored Nexus credentials
+                artifacts: [
+                    [
+                        artifactId: 'gestion-station-ski',
+                        classifier: '',
+                        file: 'target/5Arctic-G1-StationSKI.jar', 
+                        type: 'jar'
+                    ]
+                ]
+            )
+
+            echo "Deployment to Nexus completed!"
         }
     }
+}
+
 }
 
     }
