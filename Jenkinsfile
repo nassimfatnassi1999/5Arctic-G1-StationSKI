@@ -40,6 +40,29 @@ pipeline {
             }
         }
     }
+    stage('Upload to Nexus') {
+            agent { label 'agent1' } // Use agent1 for the Nexus upload
+            environment {
+                NEXUS_URL = 'http://192.168.33.11:9001/repository' // Nexus repository base URL
+                NEXUS_REPOSITORY = 'maven-central-repository' // Repository ID in Nexus
+                NEXUS_CREDENTIALS = credentials('nexus-credentials') // Jenkins Nexus credentials
+                ARTIFACT_VERSION = '1.0' // Define your artifact version
+                GROUP_ID = 'tn.esprit.spring' // Your groupId
+                ARTIFACT_ID = 'gestion-station-ski' // Your artifactId
+            }
+            steps {
+                script {
+                    def artifactPath = "target/${ARTIFACT_ID}-${ARTIFACT_VERSION}.jar"
+                    
+                    // Use Nexus REST API to upload artifact
+                    sh """
+                    curl -v -u ${NEXUS_CREDENTIALS_USR}:${NEXUS_CREDENTIALS_PSW} \
+                    --upload-file ${artifactPath} \
+                    ${NEXUS_URL}/repository/${NEXUS_REPOSITORY}/${GROUP_ID.replace('.','/')}/${ARTIFACT_ID}/${ARTIFACT_VERSION}/${ARTIFACT_ID}-${ARTIFACT_VERSION}.jar
+                    """
+                }
+            }
+        }
     post {
         success {
             script {
