@@ -4,6 +4,10 @@ pipeline {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
+    environment {
+        DOCKER_IMAGE = 'nassimFatnassi-G1-StationSKI'  // Dynamic Docker image name
+        IMAGE_TAG = 'latest'  // Image tag (e.g., 'latest' or version)
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -70,14 +74,39 @@ pipeline {
                 }
             }
         }
+
+        stage('Build and Push Docker Image') {
+            agent { label 'agent2' } // Run this stage on agent2
+            environment {
+                DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
+            }
+            steps {
+                script {
+                    // Build the Docker image using the environment variable
+                    sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} ."
+                    
+                    // Use the Docker Hub credentials to log in and push the image
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Login to Docker Hub
+                        sh script: 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin', returnStdout: true
+                        
+                        // Tag the Docker image
+                        sh "docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}"
+                        
+                        // Push the Docker image to Docker Hub
+                        sh "docker push $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
     }
 
     post {
         success {
             script {
-                // Send a success message to Slack
+                // Send a success message to Slack with image name and tag
                 slackSend(channel: '#jenkins-messg', 
-                          message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} !")
+                          message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully.")
             }
         }
         failure {
