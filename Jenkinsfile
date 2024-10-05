@@ -82,6 +82,8 @@ pipeline {
             }
             steps {
                 script {
+                    //to create jar
+                    sh 'mvn clean package'
                     // Build the Docker image using the environment variable
                     sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} ."
                     
