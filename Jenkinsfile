@@ -5,7 +5,7 @@ pipeline {
         maven 'M2_HOME'
     }
     environment {
-        DOCKER_IMAGE = 'nassimFatnassi-G1-StationSKI'  // Dynamic Docker image name
+        DOCKER_IMAGE = 'nassimfatnassi-g1-stationski'  // Dynamic Docker image name
         IMAGE_TAG = 'latest'  // Image tag (e.g., 'latest' or version)
     }
     stages {
