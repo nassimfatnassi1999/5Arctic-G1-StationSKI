@@ -26,7 +26,7 @@ pipeline {
             }
         }
 
-       /* stage('Static Analysis') {
+        stage('Static Analysis') {
             agent { label 'agent1' } // Specify the agent for this stage
             environment {
                 SONAR_URL = "http://192.168.33.11:9000/"
@@ -44,7 +44,7 @@ pipeline {
                 sh 'mvn jacoco:report'
             }
         }
-*/
+
         stage('Upload to Nexus') {
             agent { label 'agent1' } // Use agent1 for the Nexus upload
             steps {
