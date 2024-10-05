@@ -76,14 +76,12 @@ pipeline {
         }
 
         stage('Build and Push Docker Image') {
-            agent { label 'agent2' } // Run this stage on agent2
+            agent { label 'agent1' } 
             environment {
                 DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
             }
             steps {
                 script {
-                    //to create jar
-                    sh 'mvn clean package'
                     // Build the Docker image using the environment variable
                     sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} ."
                     
