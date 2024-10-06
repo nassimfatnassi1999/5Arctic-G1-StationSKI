@@ -67,7 +67,6 @@ pipeline {
                         credentialsId: "NEXUS", // Using your stored Nexus credentials
                         artifacts: [
                             [
-                                artifactId: 'gestion-station-ski',
                                 classifier: '',
                                 file: 'target/5Arctic-G1-StationSKI.jar',
                                 type: 'jar'
