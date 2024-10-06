@@ -4,13 +4,12 @@ pipeline {
         SONARQUBE_ENV = 'SonarQube'  // Replace with your SonarQube environment name configured in Jenkins
         SONAR_TOKEN = credentials('sonarToken')  // Use the ID of the credential storing your SonarQube token
         DOCKERHUB_CREDENTIALS = credentials('docker-hub') // Docker Hub credentials stored in Jenkins
-        environment {
-                NEXUS_VERSION = "nexus3"
-                NEXUS_PROTOCOL = "http"
-                NEXUS_URL = "192.168.33.11:8081"
-                NEXUS_REPOSITORY = "5Arctic4-G1-StationSKI"
-                NEXUS_CREDENTIAL_ID = "NEXUS"
-            }
+        NEXUS_VERSION = "nexus3"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL = "192.168.33.11:8081"
+        NEXUS_REPOSITORY = "5Arctic4-G1-StationSKI"
+        NEXUS_CREDENTIAL_ID = "NEXUS"
+
     }
 
     stages {
