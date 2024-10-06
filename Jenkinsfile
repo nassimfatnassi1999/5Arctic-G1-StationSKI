@@ -54,7 +54,7 @@ pipeline {
             }
         }
     }
-    stage("Publish to Nexus Repository Manager") {
+        stage("Publish to Nexus Repository Manager") {
                 agent { label 'agent1' }
                 steps {
                     script {
