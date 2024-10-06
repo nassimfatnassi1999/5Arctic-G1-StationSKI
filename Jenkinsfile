@@ -27,8 +27,9 @@ pipeline {
                 SONAR_URL = "http://192.168.43.11:9000/"
             }
              steps {
-                sh 'mvn sonar:sonar -Dsonar.login=**** -Dsonar.host.url=$SONAR_URL -Dsonar.java.binaries=target/classes'
-                }
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+            sh "mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=$ONAR_URL -Dsonar.java.binaries=target/classes"
+           }
         }
     }
 }
