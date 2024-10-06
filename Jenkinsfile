@@ -30,6 +30,7 @@ pipeline {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         sh 'mvn clean test'
                         sh 'mvn install'
+                        sh 'ls -l target/'
                     }
                 }
             }
