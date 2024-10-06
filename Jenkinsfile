@@ -5,11 +5,6 @@ pipeline {
         SONARQUBE_ENV = 'SonarQube'
         SONAR_TOKEN = credentials('sonarToken')
         DOCKERHUB_CREDENTIALS = credentials('docker-hub')
-        NEXUS_VERSION = "nexus3"
-        NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "192.168.33.11:8081"
-        NEXUS_REPOSITORY = "5Arctic4-G1-StationSKI"
-        NEXUS_CREDENTIAL_ID = "NEXUS"
     }
 
     stages {
@@ -57,41 +52,32 @@ pipeline {
         stage("Publish to Nexus Repository Manager") {
             agent { label 'agent1' }
             steps {
-                script {
-                    pom = readMavenPom file: "pom.xml";
-                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
-                    artifactPath = filesByGlob[0].path;
-                    artifactExists = fileExists artifactPath;
-                    if (artifactExists) {
-                        echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
-                        nexusArtifactUploader(
-                            nexusVersion: NEXUS_VERSION,
-                            protocol: NEXUS_PROTOCOL,
-                            nexusUrl: NEXUS_URL,
-                            groupId: pom.groupId,
-                            version: pom.version,
-                            repository: NEXUS_REPOSITORY,
-                            credentialsId: NEXUS_CREDENTIAL_ID,
-                            artifacts: [
-                                [artifactId: pom.artifactId,
-                                classifier: '',
-                                file: artifactPath,
-                                type: pom.packaging],
-                                [artifactId: pom.artifactId,
-                                classifier: '',
-                                file: "pom.xml",
-                                type: "pom"]
-                            ]
-                        );
-                    } else {
-                        error "*** File: ${artifactPath}, could not be found";
-                    }
-                }
-            }
-        }
-    }
+                            script {
+                                echo "Deploying to Nexus..."
 
+                                nexusArtifactUploader(
+                                    nexusVersion: 'nexus3',
+                                    protocol: 'http',
+                                    nexusUrl: "192.168.33.11:8081", // Updated Nexus URL based on previous info
+                                    groupId: 'tn.esprit.spring',
+                                    artifactId: 'gestion-station-ski',
+                                    version: '1.0',
+                                    repository: "5Arctic4-G1-StationSKI", // Based on previous Nexus repo
+                                    credentialsId: "NEXUS", // Using your stored Nexus credentials
+                                    artifacts: [
+                                        [
+                                            artifactId: 'gestion-station-ski',
+                                            classifier: '',
+                                            file: 'target/5Arctic-G1-StationSKI.jar',
+                                            type: 'jar'
+                                        ]
+                                    ]
+                                )
+
+                                echo "Deployment to Nexus completed!"
+                            }
+                        }
+                    }
     post {
         success {
             script {
