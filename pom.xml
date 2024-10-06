@@ -22,7 +22,7 @@
 		<repository>
 			<id>deploymentRepo</id>
 			<name>Nexus Repository</name>
-			<url>http://http://192.168.33.11:8081/repository/maven-releases/</url>
+			<url>http://http://192.168.33.11:8081/repository/5Arctic4-G1-StationSKI/</url>
 		</repository>
 	</distributionManagement>
 	<dependencies>
