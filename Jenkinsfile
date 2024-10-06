@@ -1,10 +1,5 @@
 pipeline {
     agent any
-
-    tools {
-        maven 'Maven 3'  // Name of the Maven installation defined in Jenkins
-    }
-
     environment {
         SONARQUBE_ENV = 'SonarQube'
         SONAR_TOKEN = credentials('sonarToken')
