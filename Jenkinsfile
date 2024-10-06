@@ -61,13 +61,15 @@ pipeline {
                         protocol: 'http',
                         nexusUrl: "192.168.33.11:8081", // Updated Nexus URL based on previous info
                         groupId: 'tn.esprit.spring',
+                        artifactId: 'gestion-station-ski',
                         version: '1.0',
                         repository: "5Arctic4-G1-StationSKI", // Based on previous Nexus repo
                         credentialsId: "NEXUS", // Using your stored Nexus credentials
                         artifacts: [
                             [
-                                file: 'target/5Arctic-G1-StationSKI.jar',
+                                artifactId: 'gestion-station-ski',
                                 classifier: '',
+                                file: 'target/5Arctic-G1-StationSKI.jar',
                                 type: 'jar'
                             ]
                         ]
@@ -77,7 +79,7 @@ pipeline {
                 }
             }
         }
-    }
+
 
     post {
         success {
