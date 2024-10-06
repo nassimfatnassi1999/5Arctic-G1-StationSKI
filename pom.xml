@@ -11,7 +11,7 @@
 	<groupId>tn.esprit.spring</groupId>
 	<artifactId>gestion-station-ski</artifactId>
 	<version>1.0</version>
-	<name>5arctic4-G1-StationSki</name>
+	<name>5Arctic-G1-StationSKI</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>1.8</java.version>
@@ -53,14 +53,23 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+ 		  <groupId>org.codehaus.sonar.plugins</groupId>
+  		  <artifactId>sonar-jacoco-plugin</artifactId>
+ 		  <version>3.2.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
+			  <groupId>org.jacoco</groupId>
+			  <artifactId>jacoco-maven-plugin</artifactId>
+ 			  <version>0.8.8</version>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>3.1.4</version>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -71,7 +80,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>5arctic4-G1-StationSki</finalName>
+			<finalName>5Arctic-G1-StationSKI</finalName>
 	</build>
 
 </project>
