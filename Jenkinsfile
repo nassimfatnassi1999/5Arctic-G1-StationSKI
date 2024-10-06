@@ -4,6 +4,13 @@ pipeline {
         SONARQUBE_ENV = 'SonarQube'  // Replace with your SonarQube environment name configured in Jenkins
         SONAR_TOKEN = credentials('sonarToken')  // Use the ID of the credential storing your SonarQube token
         DOCKERHUB_CREDENTIALS = credentials('docker-hub') // Docker Hub credentials stored in Jenkins
+        environment {
+                NEXUS_VERSION = "nexus3"
+                NEXUS_PROTOCOL = "http"
+                NEXUS_URL = "192.168.33.11:8081"
+                NEXUS_REPOSITORY = "5Arctic4-G1-StationSKI"
+                NEXUS_CREDENTIAL_ID = "NEXUS"
+            }
     }
 
     stages {
@@ -48,6 +55,42 @@ pipeline {
             }
         }
     }
+    stage("Publish to Nexus Repository Manager") {
+                agent { label 'agent1' }
+                steps {
+                    script {
+                        pom = readMavenPom file: "pom.xml";
+                        filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                        echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                        artifactPath = filesByGlob[0].path;
+                        artifactExists = fileExists artifactPath;
+                        if(artifactExists) {
+                            echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
+                            nexusArtifactUploader(
+                                nexusVersion: NEXUS_VERSION,
+                                protocol: NEXUS_PROTOCOL,
+                                nexusUrl: NEXUS_URL,
+                                groupId: pom.groupId,
+                                version: pom.version,
+                                repository: NEXUS_REPOSITORY,
+                                credentialsId: NEXUS_CREDENTIAL_ID,
+                                artifacts: [
+                                    [artifactId: pom.artifactId,
+                                    classifier: '',
+                                    file: artifactPath,
+                                    type: pom.packaging],
+                                    [artifactId: pom.artifactId,
+                                    classifier: '',
+                                    file: "pom.xml",
+                                    type: "pom"]
+                                ]
+                            );
+                        } else {
+                            error "*** File: ${artifactPath}, could not be found";
+                        }
+                    }
+                }
+            }
 
     post {
             success {
