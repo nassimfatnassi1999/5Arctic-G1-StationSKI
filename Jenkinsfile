@@ -16,9 +16,14 @@ pipeline {
                 )
             }
         }
+        stage('Clean and Install') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn compile'
             }
         }
         stage('Static Analysis') {
