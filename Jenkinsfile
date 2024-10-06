@@ -1,9 +1,14 @@
 pipeline {
     agent any
+
+    tools {
+        maven 'Maven 3'  // Name of the Maven installation defined in Jenkins
+    }
+
     environment {
-        SONARQUBE_ENV = 'SonarQube'  // Replace with your SonarQube environment name configured in Jenkins
-        SONAR_TOKEN = credentials('sonarToken')  // Use the ID of the credential storing your SonarQube token
-        DOCKERHUB_CREDENTIALS = credentials('docker-hub') // Docker Hub credentials stored in Jenkins
+        SONARQUBE_ENV = 'SonarQube'
+        SONAR_TOKEN = credentials('sonarToken')
+        DOCKERHUB_CREDENTIALS = credentials('docker-hub')
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "192.168.33.11:8081"
@@ -54,7 +59,7 @@ pipeline {
         }
 
         stage("Publish to Nexus Repository Manager") {
-            agent { label 'agent1' } // Ensure it runs on agent1
+            agent { label 'agent1' }
             steps {
                 script {
                     pom = readMavenPom file: "pom.xml";
@@ -94,14 +99,12 @@ pipeline {
     post {
         success {
             script {
-                // Send a success message to Slack
                 slackSend(channel: '#jenkins-achref',
                           message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} !")
             }
         }
         failure {
             script {
-                // Send a failure message to Slack
                 slackSend(channel: '#jenkins-achref',
                           message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
             }
