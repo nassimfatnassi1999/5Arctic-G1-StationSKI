@@ -50,7 +50,7 @@ pipeline {
                         groupId: 'tn.esprit.spring',
                         artifactId: 'gestion-station-ski',
                         version: '1.0',
-                        repository: "5Arctic4-G1-StationSKI", // Based on previous Nexus repo
+                        repository: "maven-releases", // Based on previous Nexus repo
                         credentialsId: "NEXUS", // Using your stored Nexus credentials
                         artifacts: [
                             [
