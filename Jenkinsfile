@@ -99,6 +99,15 @@ pipeline {
                 }
             }
         }
+        stage('Trivy Scan') {
+            agent { label 'agent2' } 
+            steps {
+                script {
+                    // Commande pour lancer le scan avec Trivy
+                    sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest ${DOCKER_IMAGE}:${IMAGE_TAG}'
+                }
+            }
+        }
     }
 
     post {
