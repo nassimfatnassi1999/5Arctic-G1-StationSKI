@@ -19,23 +19,10 @@ pipeline {
         stage('Compile') {
             steps {
                 script {
-                    sh 'mvn clean compile'
+                    sh 'mvn clean install'
                 }
             }
         }
-
-        stage('Build and Test') {
-            steps {
-                script {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        sh 'mvn clean test'
-                        sh 'mvn install'
-                        sh 'ls -l target/'
-                    }
-                }
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
                 script {
