@@ -64,7 +64,7 @@ pipeline {
                             [
                                 artifactId: 'gestion-station-ski',
                                 classifier: '',
-                                file: '/home/vagrant/workspace/5Arctic-G1-bakend/target/5Arctic-G1-StationSKI.jar', 
+                                file: 'target/5Arctic-G1-StationSKI.jar', 
                                 type: 'jar'
                             ]
                         ]
