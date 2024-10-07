@@ -100,7 +100,7 @@ pipeline {
             }
         }
         stage('Trivy Scan') {
-            agent { label 'agent2' } 
+            agent { label 'agent1' } 
             steps {
                 script {
                     // Commande pour lancer le scan avec Trivy
