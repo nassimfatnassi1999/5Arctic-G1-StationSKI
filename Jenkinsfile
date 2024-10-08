@@ -73,7 +73,7 @@ pipeline {
                 script {
                     dir('factures') {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            sh 'docker build -t 5Arctic-G1-StationSKI:latest .' // Assumes Dockerfile is present
+                            sh 'docker build -t arctic-g1-stationski:latest .' // Assumes Dockerfile is present
                         }
                     }
                 }
@@ -88,10 +88,10 @@ pipeline {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
 
                         // Tag the Docker image
-                        sh 'docker tag 5Arctic-G1-StationSKI:latest $DOCKER_USERNAME/5Arctic-G1-StationSKI:latest'
+                        sh 'docker tag arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
 
                         // Push the Docker image
-                        sh 'docker push $DOCKER_USERNAME/5Arctic-G1-StationSKI:latest'
+                        sh 'docker push $DOCKER_USERNAME/arctic-g1-stationski:latest'
                     }
                 }
             }
