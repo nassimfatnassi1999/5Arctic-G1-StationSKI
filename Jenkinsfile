@@ -11,7 +11,7 @@ pipeline {
                 // Get code from the GitHub repository
                 git(
                     url: 'https://github.com/nassimfatnassi1999/5Arctic-G1-StationSKI.git', 
-                    branch: 'nassimFatnassi-G1-SKI',
+                    branch: 'saaccess',
                     credentialsId: 'github-credentials'  // Add GitHub credentials ID
                 )
             }
