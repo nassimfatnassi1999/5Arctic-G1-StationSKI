@@ -73,7 +73,7 @@ pipeline {
                 script {
                     dir('factures') {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            sh 'docker build -t arctic-g1-stationski:latest .' // Assumes Dockerfile is present
+                            sh 'docker build -t arctic-g1-stationski:latest /home/vagrant/workspace/5Arctic-G1-bakend/' // Assumes Dockerfile is present
                         }
                     }
                 }
