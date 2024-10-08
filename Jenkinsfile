@@ -42,6 +42,35 @@ pipeline {
                 sh 'mvn jacoco:report'
             }
         }
+  stage('Upload to Nexus') {
+            agent { label 'agent1' } // Use agent1 for the Nexus upload
+            steps {
+                script {
+                    echo "Deploying to Nexus..."
+
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
+                        groupId: 'tn.esprit.spring',
+                        artifactId: 'gestion-station-ski',
+                        version: '1.0',
+                        repository: "maven-ski-repository", // Based on previous Nexus repo
+                        credentialsId: "nexus-credentials", // Using your stored Nexus credentials
+                        artifacts: [
+                            [
+                                artifactId: 'gestion-station-ski',
+                                classifier: '',
+                                file: 'target/5Arctic-G1-StationSKI.jar', 
+                                type: 'jar'
+                            ]
+                        ]
+                    )
+
+                    echo "Deployment to Nexus completed!"
+                }
+            }
+        }
     
     
     
