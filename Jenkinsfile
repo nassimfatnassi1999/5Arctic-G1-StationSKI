@@ -20,6 +20,11 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
+         stage('Compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
         stage('Static Analysis') {
             agent { label 'agent1' }
             environment {
