@@ -38,28 +38,31 @@ pipeline {
             }
         }
 
-        stage("Publish to Nexus Repository Manager") {
+        stage('Publish to Nexus Repository Manager') {
+            agent { label 'agent1' }
             steps {
                 script {
                     echo "Deploying to Nexus..."
+
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: "http://192.168.33.11:8081", // Corrected Nexus URL
+                        nexusUrl: "192.168.33.11:8081", // Updated Nexus URL based on previous info
                         groupId: 'tn.esprit.spring',
                         artifactId: 'gestion-station-ski',
                         version: '1.0',
-                        repository: "maven-releases",
-                        credentialsId: "NEXUS",
+                        repository: "maven-releases", // Based on previous Nexus repo
+                        credentialsId: "NEXUS", // Using your stored Nexus credentials
                         artifacts: [
                             [
                                 artifactId: 'gestion-station-ski',
                                 classifier: '',
-                                file: '/home/vagrant/workspace/5Arctic-G1-bakend/target/5Arctic-G1-StationSKI.jar', // Adjusted path
+                                file: '/home/vagrant/workspace/5Arctic-G1-bakend/target/5Arctic-G1-StationSKI.jar', // Relative path from workspace
                                 type: 'jar'
                             ]
                         ]
                     )
+
                     echo "Deployment to Nexus completed!"
                 }
             }
@@ -68,9 +71,9 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dir('factures') { // Ensure Dockerfile exists in this directory
+                    dir('factures') {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            sh 'docker build -t 5Arctic-G1-StationSKI:latest .'
+                            sh 'docker build -t 5Arctic-G1-StationSKI:latest .' // Assumes Dockerfile is present
                         }
                     }
                 }
