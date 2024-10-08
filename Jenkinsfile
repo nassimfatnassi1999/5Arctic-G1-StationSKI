@@ -11,7 +11,7 @@ pipeline {
                 // Get code from the GitHub repository
                 git(
                     url: 'https://github.com/nassimfatnassi1999/5Arctic-G1-StationSKI.git', 
-                    branch: 'saaccess',
+                    branch: 'saccess',
                     credentialsId: 'github-credentials'  // Add GitHub credentials ID
                 )
             }
@@ -31,7 +31,8 @@ pipeline {
             environment {
                 SONAR_URL = "http://192.168.43.11:9000/"
             }
-             // Use withCredentials to inject the SonarQube token
+            steps {
+                // Use withCredentials to inject the SonarQube token
                 withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
                     sh 'mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=${SONAR_URL} -Dsonar.java.binaries=target/classes'
                 }
