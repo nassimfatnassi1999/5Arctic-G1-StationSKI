@@ -15,7 +15,7 @@ pipeline {
                 )
             }
         }
-        stage('Build and Install') {
+        stage('Clean and Install') {
             steps {
                 sh 'mvn clean install'
             }
@@ -35,6 +35,17 @@ pipeline {
                     sh 'mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=${SONAR_URL} -Dsonar.java.binaries=target/classes'
                 }
             }
+     
         }
+         stage('Generate Code Coverage Report') {
+            steps {
+                sh 'mvn jacoco:report'
+            }
+        }
+    
+    
+    
+    
+    
     }
 }
