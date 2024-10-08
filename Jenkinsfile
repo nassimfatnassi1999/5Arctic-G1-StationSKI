@@ -15,16 +15,19 @@ pipeline {
                 )
             }
         }
+        
         stage('Clean and Install') {
             steps {
                 sh 'mvn clean install'
             }
         }
-         stage('Compile') {
+
+        stage('Compile') {
             steps {
                 sh 'mvn compile'
             }
         }
+
         stage('Static Analysis') {
             agent { label 'agent1' }
             environment {
@@ -35,15 +38,15 @@ pipeline {
                     sh 'mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=${SONAR_URL} -Dsonar.java.binaries=target/classes'
                 }
             }
-     
         }
-         stage('Generate Code Coverage Report') {
+        
+        stage('Generate Code Coverage Report') {
             steps {
                 sh 'mvn jacoco:report'
             }
         }
-  stage('Upload to Nexus') {
-            agent { label 'agent1' } // Use agent1 for the Nexus upload
+
+        stage('Upload to Nexus') {
             steps {
                 script {
                     echo "Deploying to Nexus..."
@@ -51,17 +54,16 @@ pipeline {
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
+                        nexusUrl: 'http://192.168.33.11:9001',
+                        repository: 'maven-ski-repository',
+                        credentialsId: 'nexus-credentials',
                         groupId: 'tn.esprit.spring',
-                        artifactId: 'gestion-station-ski',
                         version: '1.0',
-                        repository: "maven-ski-repository", // Based on previous Nexus repo
-                        credentialsId: "nexus-credentials", // Using your stored Nexus credentials
                         artifacts: [
                             [
                                 artifactId: '5Arctic-G1-StationSKI',
                                 classifier: '',
-                                file: 'target/5Arctic-G1-StationSKI.jar', 
+                                file: 'target/5Arctic-G1-StationSKI.jar',
                                 type: 'jar'
                             ]
                         ]
@@ -71,10 +73,5 @@ pipeline {
                 }
             }
         }
-    
-    
-    
-    
-    
     }
 }
