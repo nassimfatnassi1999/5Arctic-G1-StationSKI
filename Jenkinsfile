@@ -75,27 +75,24 @@ pipeline {
             }
         }
 
-        stage('Build and Push Docker Image') {
-            agent { label 'agent1' } 
-            environment {
-                DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
-            }
+        stage('Build Docker Image') {
+            agent { label 'agent1' }
             steps {
                 script {
-                    // Build the Docker image using the environment variable
-                    sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} ."
-                    
-                    // Use the Docker Hub credentials to log in and push the image
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        // Login to Docker Hub
-                        sh script: 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin', returnStdout: true
-                        
-                        // Tag the Docker image
-                        sh "docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}"
-                        
-                        // Push the Docker image to Docker Hub
-                        sh "docker push $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}"
-                    }
+                    // Define the Nexus download parameters
+                    def nexusUrl = "http://192.168.33.11:9001" // Nexus server URL
+                    def groupId = "tn.esprit.spring"
+                    def artifactId = "gestion-station-ski"
+                    def version = "1.0"
+
+                    // Build the Docker image, passing Nexus parameters as build arguments
+                    sh """
+                        docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
+                        --build-arg NEXUS_URL=${nexusUrl} \
+                        --build-arg GROUP_ID=${groupId} \
+                        --build-arg ARTIFACT_ID=${artifactId} \
+                        --build-arg VERSION=${version} .
+                    """
                 }
             }
         }
