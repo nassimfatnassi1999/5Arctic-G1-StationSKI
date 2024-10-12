@@ -105,6 +105,23 @@ pipeline {
                 }
             }
         }
+        stage('Push Docker Image') {
+            agent { label 'agent1' }
+            environment {
+                DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
+            }
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh "docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}"
+                        sh "docker push $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
+    
+    
     }
 
     post {
