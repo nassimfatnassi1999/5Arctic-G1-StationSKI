@@ -19,7 +19,8 @@ pipeline {
         stage('Compile') {
             steps {
                 script {
-                    sh 'mvn clean compile package'
+                    sh 'mvn clean compile '
+                    sh 'mvn package'
                 }
             }
         }
