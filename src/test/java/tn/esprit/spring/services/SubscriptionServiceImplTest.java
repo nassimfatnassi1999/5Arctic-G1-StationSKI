@@ -18,8 +18,7 @@ import static tn.esprit.spring.entities.TypeSubscription.ANNUAL;
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.class)
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
- class SubscriptionServiceImplTest {
+class SubscriptionServiceImplTest {
     @Autowired
     ISubscriptionServices subscriptionServices;
 
