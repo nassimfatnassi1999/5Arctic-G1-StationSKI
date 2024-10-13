@@ -3,6 +3,7 @@ package tn.esprit.spring.services;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tn.esprit.spring.entities.Subscription;
@@ -17,6 +18,7 @@ import static tn.esprit.spring.entities.TypeSubscription.ANNUAL;
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.class)
 @SpringBootTest
+@AutoConfigureTestDatabase
  class SubscriptionServiceImplTest {
     @Autowired
     ISubscriptionServices subscriptionServices;
