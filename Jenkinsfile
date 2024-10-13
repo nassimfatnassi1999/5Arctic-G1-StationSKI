@@ -20,6 +20,7 @@ pipeline {
             steps {
                 script {
                     sh 'mvn clean compile '
+                    sh 'mvn test'
                     sh 'mvn package'
                 }
             }
