@@ -19,7 +19,6 @@ import static tn.esprit.spring.entities.TypeSubscription.ANNUAL;
 @TestMethodOrder(MethodOrderer.class)
 @SpringBootTest
 class SubscriptionServiceImplTest {
-    @Autowired
     ISubscriptionServices subscriptionServices;
 
 
