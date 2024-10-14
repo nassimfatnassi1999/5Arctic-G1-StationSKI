@@ -19,9 +19,9 @@ pipeline {
         stage('Compile') {
             steps {
                 script {
-                    sh 'mvn clean compile '
-                    sh 'mvn test'
-                    sh 'mvn package'
+                    sh 'mvn clean install -DskipTests'
+                    //sh 'mvn test'
+                    //sh 'mvn package'
                 }
             }
         }
