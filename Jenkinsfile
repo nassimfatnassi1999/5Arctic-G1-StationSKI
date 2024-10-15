@@ -25,6 +25,12 @@ pipeline {
                 sh 'mvn clean compile'
             }
         }
+        stage('Run Tests Junit & Mockito') {
+             steps {
+               // Exécution des tests unitaires
+                sh 'mvn test'
+              }
+         }
 
         stage('Static Analysis') {
             agent { label 'agent1' } // Specify the agent for this stage
@@ -44,7 +50,7 @@ pipeline {
                 sh 'mvn jacoco:report'
             }
         }
-
+/*
         stage('Upload to Nexus') {
             agent { label 'agent1' } // Use agent1 for the Nexus upload
             steps {
@@ -120,7 +126,7 @@ pipeline {
                 }
             }
         }
-    
+ */
     
     }
 
