@@ -34,33 +34,31 @@ pipeline {
         }
 
         stage('Upload to Nexus') {
-            steps {
-                script {
-                    echo "Deploying to Nexus..."
+    steps {
+        script {
+            echo "Deploying to Nexus..."
 
-                    nexusArtifactUploader(
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
-                        groupId: 'tn.esprit.spring',
+            nexusArtifactUploader(
+                nexusVersion: 'nexus3',
+                protocol: 'http',
+                nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
+                groupId: 'tn.esprit.spring',
+                version: '1.0',
+                repository: "maven-central-repository", // Nexus repository
+                credentialsId: "nexus-credentials", // Nexus credentials ID
+                artifacts: [
+                    [
                         artifactId: 'gestion-station-ski',
-                        version: '1.0',
-                        repository: "maven-central-repository", // Based on previous Nexus repo
-                        credentialsId: "nexus-credentials", // Using your stored Nexus credentials
-                        artifacts: [
-                            [
-                                artifactId: 'gestion-station-ski',
-                                classifier: '',
-                                file: 'target/5Arctic-G1-StationSKI.jar',
-                                type: 'jar'
-                            ]
-                        ]
-                    )
+                        file: 'target/5Arctic-G1-StationSKI.jar', // Path to your JAR file
+                        type: 'jar'
+                    ]
+                ]
+            )
 
-                    echo "Deployment to Nexus completed!"
-                }
-            }
+            echo "Deployment to Nexus completed!"
         }
+    }
+}
 
         stage('Build Docker Image') {
             steps {
