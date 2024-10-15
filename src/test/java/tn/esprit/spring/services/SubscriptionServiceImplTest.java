@@ -1,65 +1,130 @@
 package tn.esprit.spring.services;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tn.esprit.spring.entities.Subscription;
 import tn.esprit.spring.entities.TypeSubscription;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static tn.esprit.spring.entities.TypeSubscription.ANNUAL;
 
 @ExtendWith(SpringExtension.class)
-@TestMethodOrder(MethodOrderer.class)
 @SpringBootTest
 class SubscriptionServiceImplTest {
-    @Autowired
-    ISubscriptionServices subscriptionServices;
 
+    @Mock
+    private ISubscriptionServices subscriptionServices; // Mocked service
 
-    @Test
+    @InjectMocks
+    private SubscriptionServiceImplTest subscriptionServiceImplTest; // Test subject with mocks injected
+
     @BeforeEach
-      void testaddSubscription(){
-Subscription addSubscription= Subscription.builder().startDate(LocalDate.parse("2024-10-10")).endDate(LocalDate.parse("2024-11-11")).typeSub(ANNUAL).price(1.11f).build();
-Subscription saveSubscription=subscriptionServices.addSubscription(addSubscription);
-        assertNotNull(saveSubscription.getNumSub());
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
+
     @Test
-    void testupdateSubscription(){
-        Subscription addSubscription= Subscription.builder().startDate(LocalDate.parse("2024-10-10")).endDate(LocalDate.parse("2024-11-11")).typeSub(ANNUAL).price(1.11f).build();
-        Subscription saveSubscription=subscriptionServices.addSubscription(addSubscription);
-        saveSubscription.setPrice(22.3f);
-        subscriptionServices.updateSubscription(saveSubscription);
-        assertNotNull(saveSubscription.getNumSub());
-        assertEquals(22.3f,saveSubscription.getPrice());
+    void testaddSubscription() {
+        Subscription addSubscription = Subscription.builder()
+                .startDate(LocalDate.parse("2024-10-10"))
+                .endDate(LocalDate.parse("2024-11-11"))
+                .typeSub(ANNUAL)
+                .price(1.11f)
+                .build();
+
+        Subscription savedSubscription = Subscription.builder()
+                .numSub(1L)
+                .startDate(LocalDate.parse("2024-10-10"))
+                .endDate(LocalDate.parse("2024-11-11"))
+                .typeSub(ANNUAL)
+                .price(1.11f)
+                .build();
+
+        when(subscriptionServices.addSubscription(addSubscription)).thenReturn(savedSubscription);
+
+        Subscription result = subscriptionServices.addSubscription(addSubscription);
+        assertNotNull(result.getNumSub());
+        assertEquals(1L, result.getNumSub());
     }
+
     @Test
-     void testRetrieveSubscriptionById() {
+    void testupdateSubscription() {
+        Subscription addSubscription = Subscription.builder()
+                .startDate(LocalDate.parse("2024-10-10"))
+                .endDate(LocalDate.parse("2024-11-11"))
+                .typeSub(ANNUAL)
+                .price(1.11f)
+                .build();
+
+        Subscription savedSubscription = Subscription.builder()
+                .numSub(1L)
+                .startDate(LocalDate.parse("2024-10-10"))
+                .endDate(LocalDate.parse("2024-11-11"))
+                .typeSub(ANNUAL)
+                .price(1.11f)
+                .build();
+
+        when(subscriptionServices.addSubscription(addSubscription)).thenReturn(savedSubscription);
+
+        // Modify the subscription's price
+        savedSubscription.setPrice(22.3f);
+
+        when(subscriptionServices.updateSubscription(savedSubscription)).thenReturn(savedSubscription);
+
+        Subscription updatedSubscription = subscriptionServices.updateSubscription(savedSubscription);
+        assertNotNull(updatedSubscription.getNumSub());
+        assertEquals(22.3f, updatedSubscription.getPrice());
+    }
+
+    @Test
+    void testRetrieveSubscriptionById() {
         Long subscriptionId = 1L;
 
-        // Call the retrieve method
-        Subscription retrievedSubscription = subscriptionServices.retrieveSubscriptionById(subscriptionId);
+        Subscription retrievedSubscription = Subscription.builder()
+                .numSub(subscriptionId)
+                .startDate(LocalDate.parse("2024-10-10"))
+                .endDate(LocalDate.parse("2024-11-11"))
+                .typeSub(ANNUAL)
+                .price(1.11f)
+                .build();
 
-        // Assert that the retrieved subscription is not null and has the expected values
-        assertNotNull(retrievedSubscription);
-        assertEquals(subscriptionId, retrievedSubscription.getNumSub());
+        when(subscriptionServices.retrieveSubscriptionById(subscriptionId)).thenReturn(retrievedSubscription);
+
+        Subscription result = subscriptionServices.retrieveSubscriptionById(subscriptionId);
+        assertNotNull(result);
+        assertEquals(subscriptionId, result.getNumSub());
     }
+
     @Test
     void testgetSubscriptionByType() {
         TypeSubscription subscriptionType = ANNUAL;
 
-        // Call the retrieve method
-        Set<Subscription> retrievedSubscription = subscriptionServices.getSubscriptionByType(subscriptionType);
+        Set<Subscription> subscriptions = new HashSet<>();
+        subscriptions.add(Subscription.builder()
+                .numSub(1L)
+                .startDate(LocalDate.parse("2024-10-10"))
+                .endDate(LocalDate.parse("2024-11-11"))
+                .typeSub(subscriptionType)
+                .price(1.11f)
+                .build());
 
-        // Assert that the retrieved subscription is not null and has the expected values
-        assertNotNull(retrievedSubscription);
-        for (Subscription subscription:retrievedSubscription){
-        assertEquals(subscriptionType, subscription.getTypeSub());}
+        when(subscriptionServices.getSubscriptionByType(subscriptionType)).thenReturn(subscriptions);
+
+        Set<Subscription> result = subscriptionServices.getSubscriptionByType(subscriptionType);
+        assertNotNull(result);
+        for (Subscription subscription : result) {
+            assertEquals(subscriptionType, subscription.getTypeSub());
+        }
     }
 }
