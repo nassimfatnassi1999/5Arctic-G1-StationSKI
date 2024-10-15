@@ -6,12 +6,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import tn.esprit.spring.entities.Subscription;
 import tn.esprit.spring.entities.TypeSubscription;
 
 import java.time.LocalDate;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,11 +21,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static tn.esprit.spring.entities.TypeSubscription.ANNUAL;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 class SubscriptionServiceImplTest {
 
-    @Mock
+    @MockBean
     private ISubscriptionServices subscriptionServices; // Mocked service
 
     @InjectMocks
