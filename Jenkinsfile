@@ -28,7 +28,7 @@ pipeline {
         stage('Run Tests Junit & Mockito') {
              steps {
                // Exécution des tests unitaires
-                sh 'mvn test'
+                sh 'mvn clean test jacoco:report'
               }
          }
 
@@ -45,11 +45,11 @@ pipeline {
             }
         }
 
-        stage('Generate Code Coverage Report') {
+        /*stage('Generate Code Coverage Report') {
             steps {
                 sh 'mvn jacoco:report'
             }
-        }
+        }*/
 /*
         stage('Upload to Nexus') {
             agent { label 'agent1' } // Use agent1 for the Nexus upload
