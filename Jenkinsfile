@@ -43,12 +43,13 @@ pipeline {
                 protocol: 'http',
                 nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
                 groupId: 'tn.esprit.spring',
+                artifactId: 'gestion-station-ski', // Corrected artifactId (without .jar)
                 version: '1.0',
                 repository: "maven-central-repository", // Nexus repository
                 credentialsId: "nexus-credentials", // Nexus credentials ID
                 artifacts: [
                     [
-                        artifactId: '5Arctic-G1-StationSKI.jar',
+                        artifactId: 'gestion-station-ski', // Corrected artifactId
                         file: 'target/5Arctic-G1-StationSKI.jar', // Path to your JAR file
                         type: 'jar'
                     ]
