@@ -48,7 +48,7 @@ pipeline {
                 credentialsId: "nexus-credentials", // Nexus credentials ID
                 artifacts: [
                     [
-                        artifactId: '5Arctic-G1-StationSKI',
+                        artifactId: '5Arctic-G1-StationSKI.jar',
                         file: 'target/5Arctic-G1-StationSKI.jar', // Path to your JAR file
                         type: 'jar'
                     ]
