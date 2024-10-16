@@ -66,7 +66,7 @@ pipeline {
                     // Define the Nexus download parameters
                     def nexusUrl = "http://192.168.33.11:9001" // Nexus server URL
                     def groupId = "tn.esprit.spring"
-                    def artifactId = "gestion-station-ski"
+                    def artifactId = "5Arctic-G1-StationSKI"
                     def version = "1.0"
 
                     // Build the Docker image, passing Nexus parameters as build arguments
