@@ -40,7 +40,25 @@ pipeline {
             sh 'mvn jacoco:report'
             }
         }
+            stage('Static Analysis') {
+                agent { label 'agent1' }
+                environment {
+                    SONAR_URL = "http://192.168.33.11:9000/"
+                }
+                steps {
+                    withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                         mvn sonar:sonar \
+                        -Dsonar.login=${SONAR_TOKEN} \
+                        -Dsonar.host.url=${SONAR_URL} \
+                        -Dsonar.java.binaries=target/classes \
+                        -Dsonar.jacoco.reportPaths=target/jacoco.exec
+                    '''
+                }
+            }
+        }
 
+        /*
         stage('Static Analysis') {
             agent { label 'agent1' } // Specify the agent for this stage
             environment {
@@ -53,7 +71,7 @@ pipeline {
                 }
             }
         }
-/*
+
         stage('Upload to Nexus') {
             agent { label 'agent1' } // Use agent1 for the Nexus upload
             steps {
