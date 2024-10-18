@@ -21,17 +21,20 @@ pipeline {
         }
 
         stage('Build') {
+            agent { label 'agent1' } 
             steps {
                 sh 'mvn clean install'
             }
         }
         stage('Run Tests Junit & Mockito') {
+            agent { label 'agent1' }
              steps {
                // Exécution des tests unitaires
                 sh 'mvn clean test'
               }
          }
         stage('Generate JaCoCo Report') {
+            agent { label 'agent1' }
             steps {
             // Génération du rapport JaCoCo après les tests
             sh 'mvn jacoco:report'
@@ -50,12 +53,6 @@ pipeline {
                 }
             }
         }
-
-        /*stage('Generate Code Coverage Report') {
-            steps {
-                sh 'mvn jacoco:report'
-            }
-        }*/
 /*
         stage('Upload to Nexus') {
             agent { label 'agent1' } // Use agent1 for the Nexus upload
