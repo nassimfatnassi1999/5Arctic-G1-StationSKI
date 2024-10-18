@@ -22,7 +22,6 @@ import static org.mockito.Mockito.*;
 import static tn.esprit.spring.entities.TypeSubscription.ANNUAL;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
 class SubscriptionServiceImplTest {
 
     @Mock
