@@ -28,9 +28,15 @@ pipeline {
         stage('Run Tests Junit & Mockito') {
              steps {
                // Exécution des tests unitaires
-                sh 'mvn clean test jacoco:report'
+                sh 'mvn clean test'
               }
          }
+        stage('Generate JaCoCo Report') {
+            steps {
+            // Génération du rapport JaCoCo après les tests
+            sh 'mvn jacoco:report'
+            }
+        }
 
         stage('Static Analysis') {
             agent { label 'agent1' } // Specify the agent for this stage
