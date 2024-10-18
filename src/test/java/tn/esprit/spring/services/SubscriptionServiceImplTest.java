@@ -10,9 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tn.esprit.spring.entities.Subscription;
 import tn.esprit.spring.entities.TypeSubscription;
+import tn.esprit.spring.repositories.ISubscriptionRepository;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,20 +26,19 @@ import static tn.esprit.spring.entities.TypeSubscription.ANNUAL;
 class SubscriptionServiceImplTest {
 
     @Mock
-    private ISubscriptionServices subscriptionServices; // Service mocké
+    private ISubscriptionRepository subscriptionRepository; // Mock the repository
 
     @InjectMocks
-    private SubscriptionServicesImpl subscriptionServiceImpl; // Classe à tester
+    private SubscriptionServicesImpl subscriptionServiceImpl; // Inject the service
 
     @BeforeEach
     void setUp() {
-        // Initialiser les mocks
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this); // Initialize mocks
     }
 
     @Test
     void testAddSubscription() {
-        // Préparation des données de test
+        // Test data
         Subscription addSubscription = Subscription.builder()
                 .startDate(LocalDate.parse("2024-10-10"))
                 .endDate(LocalDate.parse("2024-11-11"))
@@ -53,20 +54,19 @@ class SubscriptionServiceImplTest {
                 .price(1.11f)
                 .build();
 
-        // Simulation du comportement du service
-        when(subscriptionServices.addSubscription(addSubscription)).thenReturn(savedSubscription);
+        // Mocking repository behavior
+        when(subscriptionRepository.save(addSubscription)).thenReturn(savedSubscription);
 
-        // Appel de la méthode à tester
+        // Method call
         Subscription result = subscriptionServiceImpl.addSubscription(addSubscription);
 
-        // Vérifications
+        // Verifications
         assertNotNull(result.getNumSub());
         assertEquals(1L, result.getNumSub());
     }
 
     @Test
     void testUpdateSubscription() {
-        // Préparation des données de test
         Subscription savedSubscription = Subscription.builder()
                 .numSub(1L)
                 .startDate(LocalDate.parse("2024-10-10"))
@@ -75,16 +75,12 @@ class SubscriptionServiceImplTest {
                 .price(1.11f)
                 .build();
 
-        // Simulation du comportement du service
-        when(subscriptionServices.updateSubscription(savedSubscription)).thenReturn(savedSubscription);
+        when(subscriptionRepository.save(savedSubscription)).thenReturn(savedSubscription);
 
-        // Modification du prix
         savedSubscription.setPrice(22.3f);
 
-        // Appel de la méthode à tester
         Subscription updatedSubscription = subscriptionServiceImpl.updateSubscription(savedSubscription);
 
-        // Vérifications
         assertNotNull(updatedSubscription.getNumSub());
         assertEquals(22.3f, updatedSubscription.getPrice());
     }
@@ -101,13 +97,10 @@ class SubscriptionServiceImplTest {
                 .price(1.11f)
                 .build();
 
-        // Simulation du comportement du service
-        when(subscriptionServices.retrieveSubscriptionById(subscriptionId)).thenReturn(retrievedSubscription);
+        when(subscriptionRepository.findById(subscriptionId)).thenReturn(Optional.of(retrievedSubscription));
 
-        // Appel de la méthode à tester
         Subscription result = subscriptionServiceImpl.retrieveSubscriptionById(subscriptionId);
 
-        // Vérifications
         assertNotNull(result);
         assertEquals(subscriptionId, result.getNumSub());
     }
@@ -125,13 +118,10 @@ class SubscriptionServiceImplTest {
                 .price(1.11f)
                 .build());
 
-        // Simulation du comportement du service
-        when(subscriptionServices.getSubscriptionByType(subscriptionType)).thenReturn(subscriptions);
+        when(subscriptionRepository.findByTypeSubOrderByStartDateAsc(subscriptionType)).thenReturn(subscriptions);
 
-        // Appel de la méthode à tester
         Set<Subscription> result = subscriptionServiceImpl.getSubscriptionByType(subscriptionType);
 
-        // Vérifications
         assertNotNull(result);
         assertFalse(result.isEmpty());
         for (Subscription subscription : result) {
