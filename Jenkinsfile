@@ -11,7 +11,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Get code from the GitHub repository
                 git(
                     url: 'https://github.com/nassimfatnassi1999/5Arctic-G1-StationSKI.git', 
                     branch: 'nassimFatnassi-G1-SKI',
@@ -26,52 +25,53 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
+        
         stage('Run Tests Junit & Mockito') {
             agent { label 'agent1' }
-             steps {
-               // Exécution des tests unitaires
+            steps {
                 sh 'mvn clean test'
-              }
-         }
+            }
+        }
+
         stage('Generate JaCoCo Report') {
             agent { label 'agent1' }
             steps {
-            // Génération du rapport JaCoCo après les tests
-            sh 'mvn jacoco:report'
+                sh 'mvn jacoco:report'
             }
         }
-            stage('Static Analysis') {
-                agent { label 'agent1' }
-                environment {
-                    SONAR_URL = "http://192.168.33.11:9000/"
-                }
-                steps {
-                    withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
+
+        stage('Static Analysis') {
+            agent { label 'agent1' }
+            environment {
+                SONAR_URL = "http://192.168.33.11:9000/"
+            }
+            steps {
+                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
                     sh '''
                          mvn sonar:sonar \
                         -Dsonar.login=${SONAR_TOKEN} \
                         -Dsonar.host.url=${SONAR_URL} \
                         -Dsonar.java.binaries=target/classes \
-                        -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
+                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                     '''
                 }
             }
         }
+
         stage('Upload to Nexus') {
-            agent { label 'agent1' } // Use agent1 for the Nexus upload
+            agent { label 'agent1' }
             steps {
                 script {
                     echo "Deploying to Nexus..."
-
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
+                        nexusUrl: "192.168.33.11:9001",
                         groupId: 'tn.esprit.spring',
                         artifactId: 'gestion-station-ski',
                         version: '1.0',
-                        repository: "maven-central-repository", // Based on previous Nexus repo
-                        credentialsId: "nexus-credentials", // Using your stored Nexus credentials
+                        repository: "maven-central-repository",
+                        credentialsId: "nexus-credentials",
                         artifacts: [
                             [
                                 artifactId: 'gestion-station-ski',
@@ -81,7 +81,6 @@ pipeline {
                             ]
                         ]
                     )
-
                     echo "Deployment to Nexus completed!"
                 }
             }
@@ -91,13 +90,11 @@ pipeline {
             agent { label 'agent1' }
             steps {
                 script {
-                    // Define the Nexus download parameters
-                    def nexusUrl = "http://192.168.33.11:9001" // Nexus server URL
+                    def nexusUrl = "http://192.168.33.11:9001"
                     def groupId = "tn.esprit.spring"
                     def artifactId = "gestion-station-ski"
                     def version = "1.0"
 
-                    // Build the Docker image, passing Nexus parameters as build arguments
                     sh """
                         docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
                         --build-arg NEXUS_URL=${nexusUrl} \
@@ -108,15 +105,16 @@ pipeline {
                 }
             }
         }
+
         stage('Trivy Scan') {
-            agent { label 'agent1' } 
+            agent { label 'agent1' }
             steps {
                 script {
-                    // Commande pour lancer le scan avec Trivy
                     sh 'trivy image --scanners vuln --timeout 600s ${DOCKER_IMAGE}:${IMAGE_TAG}'
                 }
             }
         }
+
         stage('Push Docker Image') {
             agent { label 'agent1' }
             environment {
@@ -131,19 +129,17 @@ pipeline {
                     }
                 }
             }
-        
+        }
     }
     post {
         success {
             script {
-                // Send a success message to Slack with image name and tag
                 slackSend(channel: '#jenkins-messg', 
                           message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully.")
             }
         }
         failure {
             script {
-                // Send a failure message to Slack
                 slackSend(channel: '#jenkins-messg', 
                           message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
             }
