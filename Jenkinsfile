@@ -10,6 +10,7 @@ pipeline {
     }
     stages {
         stage('Clean') {
+            agent {label 'agent1'}
             steps {
                 cleanWs() // Cleans the current workspace
             }
@@ -27,7 +28,7 @@ pipeline {
         stage('Build') {
             agent { label 'agent1' } 
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean package -X'
             }
         }
         
