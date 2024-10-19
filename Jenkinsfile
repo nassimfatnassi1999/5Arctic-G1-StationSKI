@@ -40,7 +40,6 @@ pipeline {
             sh 'mvn jacoco:report'
             }
         }
-        /*
             stage('Static Analysis') {
                 agent { label 'agent1' }
                 environment {
@@ -132,7 +131,7 @@ pipeline {
                     }
                 }
             }
-        }*/ 
+        
     }
     post {
         success {
