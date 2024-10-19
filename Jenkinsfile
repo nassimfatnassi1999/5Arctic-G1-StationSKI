@@ -19,10 +19,10 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Clean & Insatll') {
             agent { label 'agent1' } 
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean install'
             }
         }
         
@@ -37,6 +37,12 @@ pipeline {
             agent { label 'agent1' }
             steps {
                 sh 'mvn jacoco:report'
+            }
+        }
+        stage('Build') {
+            agent { label 'agent1' } 
+            steps {
+                sh 'mvn clean package'
             }
         }
 
