@@ -19,33 +19,15 @@ pipeline {
             }
         }
 
-        stage('Clean & Insatll') {
-            agent { label 'agent1' } 
-            steps {
-                sh 'mvn clean install'
-            }
-        }
-        
-        stage('Run Tests Junit & Mockito') {
+         stage('Clean, Build & Test') {
             agent { label 'agent1' }
             steps {
-                sh 'mvn clean test'
+                sh '''
+                    mvn clean install
+                    mvn jacoco:report
+                '''
             }
         }
-
-        stage('Generate JaCoCo Report') {
-            agent { label 'agent1' }
-            steps {
-                sh 'mvn jacoco:report'
-            }
-        }
-        stage('Build') {
-            agent { label 'agent1' } 
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-
         stage('Static Analysis') {
             agent { label 'agent1' }
             environment {
