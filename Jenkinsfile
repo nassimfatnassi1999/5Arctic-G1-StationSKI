@@ -19,7 +19,7 @@ pipeline {
         stage('Compile') {
             steps {
                 script {
-                    sh 'mvn clean install '
+                    sh 'mvn clean compile '
                     //sh 'mvn test'
                     //sh 'mvn package'
                 }
@@ -39,6 +39,15 @@ pipeline {
                 }
             }
         }
+        stage('Unit Tests') {
+                    steps {
+                        script {
+                            sh 'mvn clean package '
+                            //sh 'mvn test'
+                            //sh 'mvn package'
+                        }
+                    }
+                }
 
         stage('Publish to Nexus Repository Manager') {
             agent { label 'agent1' }
