@@ -133,19 +133,30 @@ pipeline {
             }
         }*/
        // stage terraform command for create cluster on AZURE
-        stage('Terraform Apply - Create AKS Cluster') {
+       stage('Terraform Apply - Create AKS Cluster') {
             agent { label 'master' }
             steps {
                 script {
-                    dir('/home/vagrant/clusterAKS') {
-                        // Initialize Terraform
-                        sh 'terraform init'
+                    // Vérifie si le cluster existe déjà
+                    def clusterExists = sh(
+                        script: "az aks show --resource-group myResourceGroup --name myAKSCluster",
+                        returnStatus: true
+                    ) == 0 // Si le code de sortie est 0, le cluster existe
 
-                        // Run Terraform Plan
-                        sh 'terraform plan -out=tfplan'
+                    if (clusterExists) {
+                        echo "Le cluster AKS existe déjà, étape Terraform sautée."
+                    } else {
+                        echo "Le cluster AKS n'existe pas, lancement de Terraform."
+                        dir('/home/vagrant/clusterAKS') {
+                            // Initialisation de Terraform
+                            sh 'terraform init'
 
-                        // Apply the Terraform configuration to create the cluster
-                        sh 'terraform apply -auto-approve tfplan'
+                            // Exécuter Terraform Plan
+                            sh 'terraform plan -out=tfplan'
+
+                            // Appliquer le plan Terraform pour créer le cluster
+                            sh 'terraform apply -auto-approve tfplan'
+                        }
                     }
                 }
             }
