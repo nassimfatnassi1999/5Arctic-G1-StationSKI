@@ -132,6 +132,18 @@ pipeline {
                 }
             }
         }*/
+        
+        stage('Azure Login') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'azure-credentials', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
+                        sh '''
+                            az login -u $AZURE_USERNAME -p $AZURE_PASSWORD
+                        '''
+                    }
+                }
+            }
+        }
        // stage terraform command for create cluster on AZURE
        stage('Terraform Apply - Create AKS Cluster') {
             agent { label 'master' }
