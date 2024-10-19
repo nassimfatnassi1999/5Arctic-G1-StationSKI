@@ -52,7 +52,7 @@ pipeline {
                         -Dsonar.login=${SONAR_TOKEN} \
                         -Dsonar.host.url=${SONAR_URL} \
                         -Dsonar.java.binaries=target/classes \
-                        -Dsonar.jacoco.reportPaths=target/jacoco.exec
+                        -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
                     '''
                 }
             }
