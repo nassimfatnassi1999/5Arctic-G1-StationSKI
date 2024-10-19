@@ -33,7 +33,7 @@ pipeline {
                         sh """
                             mvn sonar:sonar \
                             -Dsonar.login=${SONAR_TOKEN} \
-                            -Dsonar.coverage.jacoco.xmlReportPaths=5Arctic-G1-StationSKI/target/site/jacoco/jacoco.xml
+                            -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
                         """
                     }
                 }
