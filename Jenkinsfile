@@ -40,7 +40,7 @@ pipeline {
                         -Dsonar.login=${SONAR_TOKEN} \
                         -Dsonar.host.url=${SONAR_URL} \
                         -Dsonar.java.binaries=target/classes \
-                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                        -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
                     '''
                 }
             }
