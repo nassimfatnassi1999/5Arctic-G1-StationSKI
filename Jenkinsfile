@@ -9,12 +9,6 @@ pipeline {
         IMAGE_TAG = 'latest'  // Image tag (e.g., 'latest' or version)
     }
     stages {
-        stage('Clean') {
-            agent {label 'agent1'}
-            steps {
-                cleanWs() // Cleans the current workspace
-            }
-        }
         stage('Checkout') {
             steps {
                 git(
