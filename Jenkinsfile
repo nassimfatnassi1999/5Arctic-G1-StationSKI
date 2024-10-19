@@ -22,7 +22,7 @@ pipeline {
         stage('Build') {
             agent { label 'agent1' } 
             steps {
-                sh 'mvn clean package -X'
+                sh 'mvn clean package'
             }
         }
         
