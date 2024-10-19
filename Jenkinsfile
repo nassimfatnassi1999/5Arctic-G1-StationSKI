@@ -56,22 +56,7 @@ pipeline {
                     '''
                 }
             }
-        }
-
-        /*
-        stage('Static Analysis') {
-            agent { label 'agent1' } // Specify the agent for this stage
-            environment {
-                SONAR_URL = "http://192.168.33.11:9000/"
-            }
-            steps {
-                // Use withCredentials to inject the SonarQube token
-                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
-                    sh 'mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN} -Dsonar.host.url=${SONAR_URL} -Dsonar.java.binaries=target/classes'
-                }
-            }
-        }
-
+        }/*
         stage('Upload to Nexus') {
             agent { label 'agent1' } // Use agent1 for the Nexus upload
             steps {
@@ -146,11 +131,29 @@ pipeline {
                     }
                 }
             }
+        }*/
+       // stage terraform command for create cluster on AZURE
+        stage('Terraform Apply - Create AKS Cluster') {
+            agent { label 'master' }
+            steps {
+                script {
+                    dir('/home/vagrant/clusterAKS') {
+                        // Initialize Terraform
+                        sh 'terraform init'
+
+                        // Run Terraform Plan
+                        sh 'terraform plan -out=tfplan'
+
+                        // Apply the Terraform configuration to create the cluster
+                        sh 'terraform apply -auto-approve tfplan'
+                    }
+                }
+            }
         }
- */
+   
+    
     
     }
-
     post {
         success {
             script {
