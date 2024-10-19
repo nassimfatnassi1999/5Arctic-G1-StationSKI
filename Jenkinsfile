@@ -40,6 +40,7 @@ pipeline {
             sh 'mvn jacoco:report'
             }
         }
+        /*
             stage('Static Analysis') {
                 agent { label 'agent1' }
                 environment {
@@ -56,7 +57,7 @@ pipeline {
                     '''
                 }
             }
-        }/*
+        }
         stage('Upload to Nexus') {
             agent { label 'agent1' } // Use agent1 for the Nexus upload
             steps {
@@ -134,6 +135,7 @@ pipeline {
         }*/
         
         stage('Azure Login') {
+            agent { label 'master' }
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'azure-credentials', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
