@@ -155,6 +155,7 @@ pipeline {
                 sh '''
                     cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend
                     cp cluster.tf /home/vagrant/myAks-cluster
+                    cd /home/vagrant/myAks-cluster
                     terraform init
                     terraform apply -auto-approve
                 '''               
