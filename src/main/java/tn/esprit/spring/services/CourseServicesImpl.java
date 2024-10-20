@@ -33,5 +33,11 @@ public class CourseServicesImpl implements  ICourseServices{
         return courseRepository.findById(numCourse).orElse(null);
     }
 
+    public Float calculateDiscount(Course course) {
+        if (course.getLevel() >= 3) {
+            return course.getPrice() * 0.9f; // 10% de réduction pour les cours avancés
+        }
+        return course.getPrice();
+    }
 
 }
