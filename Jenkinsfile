@@ -45,24 +45,24 @@ pipeline {
                 }
             }
         }*/
-         stage('Static Analysis SonarCloud') {
-                environment {
-                    SONAR_URL = "https://sonarcloud.io" // URL de SonarCloud
-                }
-            steps {
-                withCredentials([string(credentialsId: 'sonar-cloud-credentials', variable: 'SONAR_TOKEN')]) {
-                    sh '''
-                         mvn sonar:sonar \
-                        -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.host.url=${SONAR_URL} \
-                        -Dsonar.java.binaries=target/classes \
-                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-                        -Dsonar.organization=nassimfatnassi1999
-
-                        '''
-                }
-            }
+        stage('Static Analysis SonarCloud') {
+    environment {
+        SONAR_URL = "https://sonarcloud.io" // URL de SonarCloud
+    }
+    steps {
+        withCredentials([string(credentialsId: 'sonar-cloud-credentials', variable: 'SONAR_TOKEN')]) {
+            sh '''
+                mvn sonar:sonar \
+                    -Dsonar.login=${SONAR_TOKEN} \
+                    -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.java.binaries=target/classes \
+                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+                    -Dsonar.organization=nassimfatnassi1999
+            '''
         }
+    }
+}
+
 
 
         stage('Upload to Nexus') {
