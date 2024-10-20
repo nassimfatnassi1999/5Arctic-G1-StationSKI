@@ -136,6 +136,16 @@ pipeline {
                 }
             }
         }
+       stage('Deploy to AKS') {
+         agent{label'agent2'}
+            steps {
+                script {
+                    sh '' kubectl apply -f deploy.yml"
+
+                
+                }
+            }
+        }
     }
     post {
         success {
