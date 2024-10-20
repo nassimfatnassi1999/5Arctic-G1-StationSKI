@@ -4,8 +4,6 @@ pipeline {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
-
-    
     stages {
         stage('Checkout') {
             steps {
@@ -16,7 +14,6 @@ pipeline {
                 )
             }
         }
- 
         stage('Clean and Install') {
             steps {
                 sh 'mvn clean install'
