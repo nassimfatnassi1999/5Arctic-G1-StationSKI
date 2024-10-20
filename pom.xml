@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>tn.esprit.spring</groupId>
-    <artifactId>gestion-station-ski</artifactId>
+    <artifactId>5Arctic-G1-StationSKI</artifactId>
     <version>1.0</version>
     <name>5Arctic-G1-StationSKI</name>
     <description>Demo project for Spring Boot</description>
