@@ -119,15 +119,33 @@ pipeline {
             }
         }
        stage('Deploy to AKS') {
-         agent{label'agent2'}
-            steps {
-                script {
-                    sh '' kubectl apply -f deploy.yml"
-
-                
-                }
+    agent { label 'agent2' }
+    steps {
+        script {
+            // Vérifie si le cluster AKS est accessible
+            def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
+            
+            if (clusterExists) {
+                echo "Le cluster AKS existe et est accessible."
+                // Déployer l'application
+                sh 'kubectl apply -f deploy.yml'
+            } else {
+                echo "Le cluster AKS n'existe pas. Création du cluster avec Terraform."               
+                // Créer le cluster AKS avec Terraform
+                sh '''
+                    cd path/to/terraform/directory
+                    terraform init
+                    terraform apply -auto-approve
+                '''               
+                // Attendre quelques instants pour que le cluster soit prêt
+                sleep 60                
+                // Déployer l'application après la création du cluster
+                sh 'kubectl apply -f deploy.yml'
             }
         }
+    }
+}
+
     }
     post {
         success {
