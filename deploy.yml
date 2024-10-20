@@ -74,5 +74,5 @@ spec:
     app: stationski-backend
   ports:
     - protocol: TCP
-      port: 8089          
-      targetPort: 8089    
+      port: 80          
+      targetPort: 80   
