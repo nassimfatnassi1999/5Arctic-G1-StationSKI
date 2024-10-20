@@ -153,7 +153,8 @@ pipeline {
                 echo "Le cluster AKS n'existe pas. Création du cluster avec Terraform."               
                 // Créer le cluster AKS avec Terraform
                 sh '''
-                    cd path/to/terraform/directory
+                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend
+                    cp cluster.tf /home/vagrant/myAks-cluster
                     terraform init
                     terraform apply -auto-approve
                 '''               
