@@ -76,13 +76,13 @@ pipeline {
                         protocol: 'http',
                         nexusUrl: "192.168.33.11:9001",
                         groupId: 'tn.esprit.spring',
-                        artifactId: 'gestion-station-ski',
+                        artifactId: '5Arctic-G1-StationSKI',
                         version: '1.0',
                         repository: "maven-central-repository",
                         credentialsId: "nexus-credentials",
                         artifacts: [
                             [
-                                artifactId: 'gestion-station-ski',
+                                artifactId: '5Arctic-G1-StationSKI',
                                 classifier: '',
                                 file: 'target/5Arctic-G1-StationSKI.jar', 
                                 type: 'jar'
@@ -100,7 +100,7 @@ pipeline {
                 script {
                     def nexusUrl = "http://192.168.33.11:9001"
                     def groupId = "tn.esprit.spring"
-                    def artifactId = "gestion-station-ski"
+                    def artifactId = "5Arctic-G1-StationSKI"
                     def version = "1.0"
 
                     sh """
