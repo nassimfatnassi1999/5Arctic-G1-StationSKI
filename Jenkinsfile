@@ -64,14 +64,14 @@ pipeline {
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: "192.168.33.11:9001", // Correction ici
+                        nexusUrl: "192.168.33.11:9001",
                         groupId: 'tn.esprit.spring',
-                        artifactId: 'gestion-station-ski', // Ajout de l'artifactId ici
                         version: '1.0',
                         repository: "maven-releases",
                         credentialsId: "nexus-credentials",
                         artifacts: [
                             [
+                                artifactId: 'gestion-station-ski', // Déplacez-le ici
                                 file: "${env.WORKSPACE}/target/5Arctic-G1-StationSKI.jar", // Chemin dynamique
                                 type: 'jar'
                             ]
