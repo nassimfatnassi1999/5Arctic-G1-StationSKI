@@ -7,7 +7,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Clonage du dépôt Git
                 git(
                     url: 'https://github.com/nassimfatnassi1999/5Arctic-G1-StationSKI.git',
                     branch: 'HamdiAlaaEddin-G1-stationSKI'
@@ -17,41 +16,25 @@ pipeline {
 
         stage('Print Workspace Directory') {
             steps {
-                // Impression du répertoire de travail pour le débogage
                 sh 'pwd'
             }
         }
 
         stage('Clean and Install') {
             steps {
-                // Nettoyage et génération du projet avec Maven
                 sh 'mvn clean package | tee build.log'
             }
         }
 
         stage('Find JAR File') {
             steps {
-                // Recherche du fichier JAR généré
                 sh 'find . -name "*.jar"'
-            }
-        }
-
-        stage('Static Analysis') {
-            environment {
-                SONAR_URL = "http://192.168.33.11:9000/"
-            }
-            steps {
-                // Analyse statique avec SonarQube
-                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
-                    sh "mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=$SONAR_URL -Dsonar.java.binaries=target/classes"
-                }
             }
         }
 
         stage('Verify JAR File') {
             steps {
                 script {
-                    // Vérification de l'existence du fichier JAR avant l'upload
                     def jarFile = "${env.WORKSPACE}/target/5Arctic-G1-StationSKI.jar"
                     if (!fileExists(jarFile)) {
                         error "JAR file not found: ${jarFile}"
@@ -62,24 +45,35 @@ pipeline {
             }
         }
 
+        stage('Static Analysis') {
+            environment {
+                SONAR_URL = "http://192.168.33.11:9000/"
+            }
+            steps {
+                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
+                    sh "mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=$SONAR_URL -Dsonar.java.binaries=target/classes"
+                }
+            }
+        }
+
         stage('Upload to Nexus') {
             steps {
                 script {
                     echo "Deploying to Nexus..."
 
-                    // Téléchargement du fichier JAR vers Nexus
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: "192.168.33.11:9001",
+                        nexusUrl: "http://192.168.33.11:9001",  // URL correcte
                         groupId: 'tn.esprit.spring',
+                        artifactId: 'gestion-station-ski',
                         version: '1.0',
                         repository: "maven-central-repository",
                         credentialsId: "nexus-credentials",
                         artifacts: [
                             [
-                                artifactId: 'gestion-station-ski',  // Corrected artifactId
-                                file: "${env.WORKSPACE}/target/5Arctic-G1-StationSKI.jar",  // Path to the JAR file
+                                artifactId: 'gestion-station-ski',
+                                file: "${env.WORKSPACE}/target/5Arctic-G1-StationSKI.jar", // Chemin dynamique
                                 type: 'jar'
                             ]
                         ]
@@ -98,7 +92,6 @@ pipeline {
                     def artifactId = "gestion-station-ski"
                     def version = "1.0"
 
-                    // Construction de l'image Docker avec les arguments Nexus
                     sh """
                         docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
                         --build-arg NEXUS_URL=${nexusUrl} \
