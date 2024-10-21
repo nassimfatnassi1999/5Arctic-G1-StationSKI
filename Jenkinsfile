@@ -84,25 +84,30 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            environment {
-                DOCKER_IMAGE = 'gestion-station-ski'
-                IMAGE_TAG = '1.0'
-                NEXUS_URL = "http://192.168.33.11:9001"
-                GROUP_ID = "tn.esprit.spring"
-                ARTIFACT_ID = "gestion-station-ski"
-                VERSION = "1.0"
-            }
-            steps {
-                script {
-                    sh """
-                        docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
-                        --build-arg NEXUS_URL=${NEXUS_URL} \
-                        --build-arg GROUP_ID=${GROUP_ID} \
-                        --build-arg ARTIFACT_ID=${ARTIFACT_ID} \
-                        --build-arg VERSION=${VERSION} .
-                    """
-                }
-            }
+    environment {
+        DOCKER_IMAGE = 'gestion-station-ski'
+        IMAGE_TAG = '1.0'
+        NEXUS_URL = "http://192.168.33.11:9001"
+        GROUP_ID = "tn.esprit.spring"
+        ARTIFACT_ID = "gestion-station-ski"
+        VERSION = "1.0"
+    }
+    steps {
+        script {
+            // Vérifiez le contenu du répertoire de travail
+            sh 'ls -l' 
+
+            // Construisez l'image Docker
+            sh """
+                docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
+                --build-arg NEXUS_URL=${NEXUS_URL} \
+                --build-arg GROUP_ID=${GROUP_ID} \
+                --build-arg ARTIFACT_ID=${ARTIFACT_ID} \
+                --build-arg VERSION=${VERSION} .
+            """
+        }
+    }
+}
         }
     }
 }
