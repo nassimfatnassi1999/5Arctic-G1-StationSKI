@@ -66,13 +66,11 @@ pipeline {
                         protocol: 'http',
                         nexusUrl: "http://192.168.33.11:9001",  // URL correcte
                         groupId: 'tn.esprit.spring',
-                        artifactId: 'gestion-station-ski',
                         version: '1.0',
                         repository: "maven-central-repository",
                         credentialsId: "nexus-credentials",
                         artifacts: [
                             [
-                                artifactId: 'gestion-station-ski',
                                 file: "${env.WORKSPACE}/target/5Arctic-G1-StationSKI.jar", // Chemin dynamique
                                 type: 'jar'
                             ]
@@ -85,19 +83,22 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            environment {
+                DOCKER_IMAGE = 'gestion-station-ski'
+                IMAGE_TAG = '1.0'
+                NEXUS_URL = "http://192.168.33.11:9001"
+                GROUP_ID = "tn.esprit.spring"
+                ARTIFACT_ID = "gestion-station-ski"
+                VERSION = "1.0"
+            }
             steps {
                 script {
-                    def nexusUrl = "http://192.168.33.11:9001"
-                    def groupId = "tn.esprit.spring"
-                    def artifactId = "gestion-station-ski"
-                    def version = "1.0"
-
                     sh """
                         docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
-                        --build-arg NEXUS_URL=${nexusUrl} \
-                        --build-arg GROUP_ID=${groupId} \
-                        --build-arg ARTIFACT_ID=${artifactId} \
-                        --build-arg VERSION=${version} .
+                        --build-arg NEXUS_URL=${NEXUS_URL} \
+                        --build-arg GROUP_ID=${GROUP_ID} \
+                        --build-arg ARTIFACT_ID=${ARTIFACT_ID} \
+                        --build-arg VERSION=${VERSION} .
                     """
                 }
             }
