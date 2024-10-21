@@ -64,7 +64,7 @@ pipeline {
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: "http://192.168.33.11:9001", // Correction ici
+                        nexusUrl: "192.168.33.11:9001", // Correction ici
                         groupId: 'tn.esprit.spring',
                         artifactId: 'gestion-station-ski', // Ajout de l'artifactId ici
                         version: '1.0',
