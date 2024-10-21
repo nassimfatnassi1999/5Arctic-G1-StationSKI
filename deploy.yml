@@ -36,6 +36,9 @@ spec:
         ports:
         - containerPort: 80
           name: frontend-port
+        # Update the label for frontend
+        labels:
+          app: stationski-frontend
 ---
 apiVersion: v1
 kind: Service
@@ -69,10 +72,10 @@ kind: Service
 metadata:
   name: frontend-service
 spec:
-  type: LoadBalancer  
+  type: LoadBalancer
   selector:
-    app: stationski-backend
+    app: stationski-frontend  # Updated the selector to match the frontend label
   ports:
     - protocol: TCP
-      port: 80          
-      targetPort: 80   
+      port: 80
+      targetPort: 80
