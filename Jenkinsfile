@@ -42,18 +42,18 @@ pipeline {
                 }
             }
         }
-stage('Verify JAR File') {
-    steps {
-        script {
-            def jarFile = "${env.WORKSPACE}/target/5Arctic-G1-StationSKI.jar"
-            if (!fileExists(jarFile)) {
-                error "JAR file not found: ${jarFile}"
-            } else {
-                echo "JAR file found: ${jarFile}"
+        stage('Verify JAR File') {
+            steps {
+                script {
+                    def jarFile = "${env.WORKSPACE}/target/5Arctic-G1-StationSKI.jar"
+                    if (!fileExists(jarFile)) {
+                        error "JAR file not found: ${jarFile}"
+                    } else {
+                        echo "JAR file found: ${jarFile}"
+                    }
+                }
             }
         }
-    }
-}
         stage('Upload to Nexus') {
             steps {
                 script {
