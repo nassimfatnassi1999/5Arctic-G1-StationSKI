@@ -20,6 +20,13 @@ pipeline {
             }
         }
 
+        stage('Verify JAR File') {
+            steps {
+                // Verify that the JAR file exists
+                sh 'ls -l /home/vagrant/workspace/5Arctic-G1-StationSKI/target/'
+            }
+        }
+
         stage('Static Analysis') {
             environment {
                 SONAR_URL = "http://192.168.33.11:9000/"
@@ -41,14 +48,14 @@ pipeline {
                         protocol: 'http',
                         nexusUrl: "192.168.33.11:9001",
                         groupId: 'tn.esprit.spring',
-                        artifactId: 'gestion-station-ski', // Corrected artifactId
+                        artifactId: 'gestion-station-ski', // Correct artifactId without .jar extension
                         version: '1.0',
-                        repository: "maven-central-repository", // Nexus repository
-                        credentialsId: "nexus-credentials", // Nexus credentials ID
+                        repository: "maven-central-repository",
+                        credentialsId: "nexus-credentials",
                         artifacts: [
                             [
-                                artifactId: 'gestion-station-ski', // Corrected artifactId
-                                file: '/home/vagrant/workspace/5Arctic-G1-StationSKI/target/5Arctic-G1-StationSKI.jar', // Verify the path
+                                artifactId: 'gestion-station-ski', // Correct artifactId without .jar extension
+                                file: '/home/vagrant/workspace/5Arctic-G1-StationSKI/target/5Arctic-G1-StationSKI.jar', // Ensure the path is correct
                                 type: 'jar'
                             ]
                         ]
@@ -62,13 +69,11 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Define the Nexus download parameters
-                    def nexusUrl = "http://192.168.33.11:9001" // Nexus server URL
+                    def nexusUrl = "http://192.168.33.11:9001"
                     def groupId = "tn.esprit.spring"
-                    def artifactId = "gestion-station-ski" // Corrected artifactId
+                    def artifactId = "gestion-station-ski"
                     def version = "1.0"
 
-                    // Build the Docker image, passing Nexus parameters as build arguments
                     sh """
                         docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
                         --build-arg NEXUS_URL=${nexusUrl} \
