@@ -108,6 +108,39 @@ pipeline {
             }
         }
     }
+    stage('Deploy to AKS') {
+        steps {
+            script {
+                // Vérifie si le cluster AKS est accessible
+                def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
+
+                if (clusterExists) {
+                    echo "Le cluster AKS existe et est accessible."
+                    // Déployer l'application
+                    sh 'kubectl apply -f deploy.yml'
+                } else {
+                    echo "Le cluster AKS n'existe pas. Création du cluster avec Terraform."
+                    // Créer le cluster AKS avec Terraform
+                    sh '''
+
+                        cd /home/vagrant/cluster
+                        terraform init
+                        terraform apply -auto-approve
+                    '''
+                    // Attendre quelques instants pour que le cluster soit prêt
+                    sleep 60
+                    //acceder au cluster
+                    sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
+                    // Déployer l'application après la création du cluster
+                    sh '''
+                         kubectl apply -f deploy.yml
+                    '''
+                }
+            }
+        }
+    }
+
+
 
     post {
         success {

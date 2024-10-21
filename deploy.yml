@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: station-ski-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stationski-backend
+  template:
+    metadata:
+      labels:
+        app: stationski-backend
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:latest
+        env:
+        - name: MYSQL_DATABASE
+          value: stationSki  
+        - name: MYSQL_ROOT_PASSWORD  
+          value: root
+        ports:
+        - containerPort: 3306
+          name: mysql-port
+      - name: backend
+        image: mohammedachref/arctic-g1-stationski:latest
+        env:
+        - name: DATABASE_URL
+          value: jdbc:mysql://mysql-service:3306/stationSki  
+        ports:
+        - containerPort: 9000
+          name: backend-port
+      - name: frontend-stationski
+        image: mohammedachref/front-g1-stationski:latest
+        ports:
+        - containerPort: 80
+          name: frontend-port
+        # Update the label for frontend
+         labels:
+          app: stationski-frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  type: ClusterIP
+  selector:
+    app: stationski-backend
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: NodePort
+  selector:
+    app: stationski-backend
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+      nodePort: 30100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: stationski-frontend  # Updated the selector to match the frontend label
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
