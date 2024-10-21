@@ -32,32 +32,32 @@ pipeline {
         }
 
         stage('Upload to Nexus') {
-    steps {
-        script {
-            echo "Deploying to Nexus..."
+            steps {
+                script {
+                    echo "Deploying to Nexus..."
 
-            nexusArtifactUploader(
-                nexusVersion: 'nexus3',
-                protocol: 'http',
-                nexusUrl: "192.168.33.11:9001", // Updated Nexus URL based on previous info
-                groupId: 'tn.esprit.spring',
-                artifactId: 'gestion-station-ski', // Corrected artifactId (without .jar)
-                version: '1.0',
-                repository: "maven-central-repository", // Nexus repository
-                credentialsId: "nexus-credentials", // Nexus credentials ID
-                artifacts: [
-                    [
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: "192.168.33.11:9001",
+                        groupId: 'tn.esprit.spring',
                         artifactId: 'gestion-station-ski', // Corrected artifactId
-                        file: '/home/vagrant/workspace/5Arctic-G1-bakend/target/5Arctic-G1-StationSKI.jar', // Path to your JAR file
-                        type: 'jar'
-                    ]
-                ]
-            )
+                        version: '1.0',
+                        repository: "maven-central-repository", // Nexus repository
+                        credentialsId: "nexus-credentials", // Nexus credentials ID
+                        artifacts: [
+                            [
+                                artifactId: 'gestion-station-ski', // Corrected artifactId
+                                file: '/home/vagrant/workspace/5Arctic-G1-StationSKI/target/5Arctic-G1-StationSKI.jar', // Verify the path
+                                type: 'jar'
+                            ]
+                        ]
+                    )
 
-            echo "Deployment to Nexus completed!"
+                    echo "Deployment to Nexus completed!"
+                }
+            }
         }
-    }
-}
 
         stage('Build Docker Image') {
             steps {
@@ -65,7 +65,7 @@ pipeline {
                     // Define the Nexus download parameters
                     def nexusUrl = "http://192.168.33.11:9001" // Nexus server URL
                     def groupId = "tn.esprit.spring"
-                    def artifactId = "5Arctic-G1-StationSKI"
+                    def artifactId = "gestion-station-ski" // Corrected artifactId
                     def version = "1.0"
 
                     // Build the Docker image, passing Nexus parameters as build arguments
