@@ -48,7 +48,7 @@ pipeline {
                 artifacts: [
                     [
                         artifactId: 'gestion-station-ski', // Corrected artifactId
-                        file: 'target/5Arctic-G1-StationSKI.jar', // Path to your JAR file
+                        file: '/home/vagrant/workspace/5Arctic-G1-bakend/target/5Arctic-G1-StationSKI.jar', // Path to your JAR file
                         type: 'jar'
                     ]
                 ]
