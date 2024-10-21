@@ -67,7 +67,7 @@ pipeline {
                         nexusUrl: "192.168.33.11:9001", // Correction ici
                         groupId: 'tn.esprit.spring',
                         version: '1.0',
-                        repository: "maven-central-repository",
+                        repository: "maven-releases",
                         credentialsId: "nexus-credentials",
                         artifacts: [
                             [
