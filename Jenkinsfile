@@ -155,13 +155,19 @@ pipeline {
                 sh '''
                     cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend
                     cp cluster.tf /home/vagrant/myAks-cluster
+                    cd /home/vagrant/myAks-cluster
                     terraform init
                     terraform apply -auto-approve
                 '''               
                 // Attendre quelques instants pour que le cluster soit prêt
-                sleep 60                
+                sleep 60      
+                //acceder au cluster
+                sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
                 // Déployer l'application après la création du cluster
-                sh 'kubectl apply -f deploy.yml'
+                sh '''
+                     cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend
+                     kubectl apply -f deploy.yml
+                '''
             }
         }
     }
