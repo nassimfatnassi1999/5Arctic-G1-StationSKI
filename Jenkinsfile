@@ -81,7 +81,7 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            agent { label 'master' }
+            agent { label 'agent1' }
             steps {
                 script {
                     sh 'docker build -t arctic-g1-stationski:latest /home/vagrant/workspace/5Arctic-G1-bakend/'
@@ -90,7 +90,7 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
-            agent { label 'master' }
+            agent { label 'agent1' }
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
