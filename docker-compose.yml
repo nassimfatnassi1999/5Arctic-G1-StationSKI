@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: stationSki
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+
+  backend:
+    image: fatnassihnifinassim353/nassimfatnassi-g1-stationski:latest
+    environment:
+      DATABASE_URL: jdbc:mysql://mysql:3306/stationSki
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mysql
+
+  frontend-stationski:
+    image: fatnassihnifinassim353/front-g1-stationski:latest
+    ports:
+      - "80:80"
