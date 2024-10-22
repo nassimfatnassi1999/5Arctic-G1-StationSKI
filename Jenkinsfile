@@ -9,6 +9,7 @@ pipeline {
 
     stages {
         stage('Checkout GIT') {
+            agent { label 'master' }
             steps {
                 echo 'Pulling from Git...'
                 git branch: 'SamaaliMedAchref-G1-StationSKI',
@@ -17,6 +18,7 @@ pipeline {
         }
 
         stage('Compile') {
+            agent { label 'master' }
             steps {
                 script {
                     sh 'mvn clean compile'
@@ -25,6 +27,7 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
+            agent { label 'master' }
             steps {
                 script {
                     withSonarQubeEnv("${SONARQUBE_ENV}") {
@@ -39,6 +42,7 @@ pipeline {
         }
 
         stage('Unit Tests') {
+            agent { label 'master' }
             steps {
                 script {
                     sh 'mvn clean package'
@@ -77,6 +81,7 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            agent { label 'master' }
             steps {
                 script {
                     sh 'docker build -t arctic-g1-stationski:latest /home/vagrant/workspace/5Arctic-G1-bakend/'
@@ -85,6 +90,7 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
+            agent { label 'master' }
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
@@ -97,7 +103,7 @@ pipeline {
         }
 
         stage('Deploy to AKS') {
-            agent any
+            agent { label 'master' }
             steps {
                 script {
                     def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
