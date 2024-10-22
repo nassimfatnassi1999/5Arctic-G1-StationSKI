@@ -114,7 +114,7 @@ pipeline {
                     } else {
                         echo "The AKS cluster does not exist. Creating the cluster with Terraform."
                         sh '''
-                            cd /home/vagrant/cluster
+                            cd ~/cluster/
                             terraform init
                             terraform apply -auto-approve
                         '''
