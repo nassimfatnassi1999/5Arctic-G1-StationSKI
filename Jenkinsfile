@@ -103,7 +103,7 @@ pipeline {
         }
 
         stage('Deploy to AKS') {
-            agent { label 'master' }
+            agent { label 'agent1' }
             steps {
                 script {
                     def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
@@ -114,7 +114,7 @@ pipeline {
                     } else {
                         echo "The AKS cluster does not exist. Creating the cluster with Terraform."
                         sh '''
-                            cd ~/workspace/cluster/
+                            cd /home/vagrant/cluster
                             sudo terraform init
                             sudo terraform apply -auto-approve
                         '''
