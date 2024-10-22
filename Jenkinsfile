@@ -97,6 +97,7 @@ pipeline {
         }
 
         stage('Deploy to AKS') {
+            agent { label 'master' }
             steps {
                 script {
                     def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
