@@ -115,8 +115,8 @@ pipeline {
                         echo "The AKS cluster does not exist. Creating the cluster with Terraform."
                         sh '''
                             cd ~/workspace/cluster/
-                            terraform init
-                            terraform apply -auto-approve
+                            sudo terraform init
+                            sudo terraform apply -auto-approve
                         '''
                         sleep 60
                         sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
