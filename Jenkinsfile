@@ -7,6 +7,9 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'nassimfatnassi-g1-stationski'  // Dynamic Docker image name
         IMAGE_TAG = 'latest'  // Image tag (e.g., 'latest' or version)
+        HELM_CHART_NAME = 'stationski'
+        HELM_RELEASE_NAME = 'stationski-release'
+        HELM_NAMESPACE = 'default'
     }
     stages {
         stage('Checkout') {
@@ -138,38 +141,37 @@ pipeline {
                 }
             }
         }
-       stage('Deploy to AKS') {
+ stage('Deploy to AKS') {
     agent { label 'agent2' }
     steps {
         script {
-            // Vérifie si le cluster AKS est accessible
-            def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
-            
-            if (clusterExists) {
-                echo "Le cluster AKS existe et est accessible."
-                // Déployer l'application
-                sh 'kubectl apply -f deploy.yml'
-            } else {
-                echo "Le cluster AKS n'existe pas. Création du cluster avec Terraform."               
-                // Créer le cluster AKS avec Terraform
-                sh '''
-                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend
-                    cp cluster.tf /home/vagrant/myAks-cluster
-                    cd /home/vagrant/myAks-cluster
-                    terraform init
-                    terraform apply -auto-approve
-                '''               
-                // Attendre quelques instants pour que le cluster soit prêt
-                sleep 60      
-                //acceder au cluster
-                sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
-                // Déployer l'application après la création du cluster
-                sh '''
-                     cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend
-                     kubectl apply -f deploy.yml
-                '''
-            }
-        }
+                    def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
+
+                    if (clusterExists) {
+                        echo "Cluster exists. Deploying the application with Helm."
+
+                        // Helm deployment for frontend and backend
+                        sh '''
+                            cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
+                            helm upgrade --install stationski . --set backend.image=fatnassihnifinassim353/nassimfatnassi-g1-stationski:latest,frontend.image=fatnassihnifinassim353/front-g1-stationski:latest
+                        '''
+                    } else {
+                        echo "Cluster does not exist. Creating with Terraform."
+                        sh '''
+                            cd /home/vagrant/myAks-cluster
+                            terraform init
+                            terraform apply -auto-approve
+                        '''
+                        sleep 60
+                        sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
+                        
+                        // Deploy application with Helm
+                        sh '''
+                            cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
+                            helm upgrade --install stationski .
+                        '''
+                    }
+                }
     }
 }
 
