@@ -7,9 +7,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'nassimfatnassi-g1-stationski'  // Dynamic Docker image name
         IMAGE_TAG = 'latest'  // Image tag (e.g., 'latest' or version)
-        HELM_CHART_NAME = 'stationski'
-        HELM_RELEASE_NAME = 'stationski-release'
-        HELM_NAMESPACE = 'default'
     }
     stages {
         stage('Checkout') {
