@@ -17,11 +17,11 @@ pipeline {
             }
         }
 
-        stage('Compile') {
+        stage('clean build && Unit Tests ') {
             agent { label 'master' }
             steps {
                 script {
-                    sh 'mvn clean compile'
+                    sh 'mvn clean install'
                 }
             }
         }
@@ -41,14 +41,6 @@ pipeline {
             }
         }
 
-        stage('Unit Tests') {
-            agent { label 'master' }
-            steps {
-                script {
-                    sh 'mvn clean package'
-                }
-            }
-        }
 
         stage('Publish to Nexus Repository Manager') {
             agent { label 'agent1' }
