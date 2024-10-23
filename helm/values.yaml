@@ -1,0 +1,17 @@
+replicaCount: 1
+
+mysql:
+  image: mysql:latest
+  rootPassword: root
+  database: stationSki
+  servicePort: 3306
+
+backend:
+  image: fatnassihnifinassim353/nassimfatnassi-g1-stationski:latest
+  servicePort: 9000
+  env:
+    databaseUrl: jdbc:mysql://mysql-service:3306/stationSki
+
+frontend:
+  image: fatnassihnifinassim353/front-g1-stationski:latest
+  servicePort: 80
