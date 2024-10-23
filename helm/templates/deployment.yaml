@@ -12,15 +12,12 @@ spec:
       labels:
         app: backend
     spec:
+      initContainers:
+      - name: wait-for-mysql
+        image: busybox
+        command: ['sh', '-c', 'until nc -z mysql {{ .Values.mysql.servicePort }}; do echo waiting for mysql; sleep 2; done;']
+
       containers:
-      - name: backend
-        image: {{ .Values.backend.image }}
-        env:
-        - name: DATABASE_URL
-          value: jdbc:mysql://localhost:3306/{{ .Values.mysql.database }}
-        ports:
-        - containerPort: {{ .Values.backend.servicePort }}
-      
       - name: mysql
         image: {{ .Values.mysql.image }}
         env:
@@ -30,6 +27,14 @@ spec:
           value: {{ .Values.mysql.rootPassword }}
         ports:
         - containerPort: {{ .Values.mysql.servicePort }}
+
+      - name: backend
+        image: {{ .Values.backend.image }}
+        env:
+        - name: DATABASE_URL
+          value: jdbc:mysql://mysql:3306/{{ .Values.mysql.database }}  
+        ports:
+        - containerPort: {{ .Values.backend.servicePort }}
 
 ---
 apiVersion: apps/v1
