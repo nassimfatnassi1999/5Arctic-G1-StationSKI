@@ -1,10 +1,16 @@
 package tn.esprit.spring;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.boot.test.context.SpringBootTest;
 import tn.esprit.spring.entities.Course;
 import tn.esprit.spring.services.CourseServicesImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-public class CourseServiceTest {
+@SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
+public class CourseServiceImplTest {
 
 
     private final CourseServicesImpl courseServices = new CourseServicesImpl(null); // on ne teste pas le repo ici
