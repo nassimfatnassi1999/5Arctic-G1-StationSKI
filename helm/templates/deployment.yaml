@@ -17,9 +17,19 @@ spec:
         image: {{ .Values.backend.image }}
         env:
         - name: DATABASE_URL
-          value: {{ .Values.backend.env.databaseUrl }}
+          value: jdbc:mysql://localhost:3306/{{ .Values.mysql.database }}
         ports:
         - containerPort: {{ .Values.backend.servicePort }}
+      
+      - name: mysql
+        image: {{ .Values.mysql.image }}
+        env:
+        - name: MYSQL_DATABASE
+          value: {{ .Values.mysql.database }}
+        - name: MYSQL_ROOT_PASSWORD
+          value: {{ .Values.mysql.rootPassword }}
+        ports:
+        - containerPort: {{ .Values.mysql.servicePort }}
 
 ---
 apiVersion: apps/v1
