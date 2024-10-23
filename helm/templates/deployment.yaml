@@ -12,11 +12,6 @@ spec:
       labels:
         app: backend
     spec:
-      initContainers:
-      - name: wait-for-mysql
-        image: busybox
-        command: ['sh', '-c', 'until nc -z mysql {{ .Values.mysql.servicePort }}; do echo waiting for mysql; sleep 2; done;']
-
       containers:
       - name: mysql
         image: {{ .Values.mysql.image }}
