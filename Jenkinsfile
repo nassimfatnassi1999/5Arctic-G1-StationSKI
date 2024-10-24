@@ -138,38 +138,51 @@ pipeline {
                 }
             }
         }
- stage('Deploy to AKS') {
+        stage('Deploy to AKS') {
     agent { label 'agent2' }
     steps {
         script {
-                    def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
+            def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
 
-                    if (clusterExists) {
-                        echo "Cluster exists. Deploying the application with Helm."
+            if (clusterExists) {
+                echo "Cluster exists. Deploying the application and Ingress with deploy.yml."
 
-                        // Helm deployment for frontend and backend
-                        sh '''
-                            cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
-                            helm upgrade --install stationski . --set backend.image=fatnassihnifinassim353/nassimfatnassi-g1-stationski:latest,frontend.image=fatnassihnifinassim353/front-g1-stationski:latest
-                        '''
-                    } else {
-                        echo "Cluster does not exist. Creating with Terraform."
-                        sh '''
-                            cd /home/vagrant/myAks-cluster
-                            terraform init
-                            terraform apply -auto-approve
-                        '''
-                        sleep 60
-                        sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
-                        
-                        // Deploy application with Helm
-                        sh '''
-                            cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
-                            helm upgrade --install stationski .
-                        '''
-                    }
-                }
+                // Deploying the application using kubectl and deploy.yml
+                sh '''
+                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/k8s
+                    kubectl apply -f deploy.yml
+                '''
+
+                // Apply the Ingress resource
+                sh '''
+                    kubectl apply -f ingress.yml
+                '''
+            } else {
+                echo "Cluster does not exist. Creating with Terraform."
+                sh '''
+                    cd /home/vagrant/myAks-cluster
+                    terraform init
+                    terraform apply -auto-approve
+                '''
+                sleep 60
+                sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
+
+                // Deploying the application using kubectl and deploy.yml
+                sh '''
+                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/k8s
+                    kubectl apply -f deploy.yml
+                '''
+
+                // Apply the Ingress resource
+                sh '''
+                    kubectl apply -f ingress.yml
+                '''
+            }
+        }
     }
+}
+
+ 
 }
 
     }

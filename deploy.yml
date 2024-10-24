@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: station-ski-backend-deployment
+  name: station-ski-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stationski-backend  
+      app: stationski-app  
   template:
     metadata:
       labels:
-        app: stationski-backend  
+        app: stationski-app  
     spec:
       containers:
       - name: mysql
@@ -27,76 +27,33 @@ spec:
         image: fatnassihnifinassim353/nassimfatnassi-g1-stationski:latest
         env:
         - name: DATABASE_URL
-          value: jdbc:mysql://mysql-service:3306/stationSki  
+          value: jdbc:mysql://localhost:3306/stationSki  
         ports:
         - containerPort: 9000
           name: backend-port
-
----
-# Service pour MySQL
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql-service
-spec:
-  type: ClusterIP
-  selector:
-    app: stationski-backend  
-  ports:
-    - protocol: TCP
-      port: 3306
-      targetPort: 3306
-
----
-# Service pour le backend
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-service
-spec:
-  type: NodePort
-  selector:
-    app: stationski-backend  
-  ports:
-    - protocol: TCP
-      port: 9000
-      targetPort: 9000
-      nodePort: 30100
-
----
-# Déploiement pour le frontend
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: station-ski-frontend-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: stationski-frontend
-  template:
-    metadata:
-      labels:
-        app: stationski-frontend
-    spec:
-      containers:
-      - name: frontend-stationski
+      - name: frontend
         image: fatnassihnifinassim353/front-g1-stationski:latest 
         ports:
         - containerPort: 80
           name: frontend-port
 
 ---
-# Service pour le frontend
+# Service pour accéder à toutes les applications
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: stationski-service
 spec:
   type: LoadBalancer
   selector:
-    app: stationski-frontend
+    app: stationski-app
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
