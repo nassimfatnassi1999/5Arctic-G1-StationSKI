@@ -36,8 +36,6 @@ spec:
           ports:
             - containerPort: 80
               name: frontend-port
-          labels:
-            app: stationski-frontend  # Fixed indentation of labels
 ---
 apiVersion: v1
 kind: Service
