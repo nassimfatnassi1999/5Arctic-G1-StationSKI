@@ -43,7 +43,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
                     echo 'Running SonarQube analysis'
-                    sh "mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=$SONAR_URL -Dsonar.java.binaries=target/classes"
+                    sh "mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=$SONAR_URL -Dsonar.java.binaries=target/classes  -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml"
                 }
             }
         }
