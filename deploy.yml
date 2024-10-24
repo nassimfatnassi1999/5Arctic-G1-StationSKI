@@ -42,18 +42,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: stationski-service
+  name: frontend-service
 spec:
   type: LoadBalancer
   selector:
-    app: stationski-app
+    app: stationski-frontend  # Updated the selector to match the frontend label
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
-    - protocol: TCP
-      port: 9000
-      targetPort: 9000
-    - protocol: TCP
-      port: 3306
-      targetPort: 3306
