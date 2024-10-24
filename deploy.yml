@@ -13,32 +13,31 @@ spec:
         app: stationski-backend
     spec:
       containers:
-      - name: mysql
-        image: mysql:latest
-        env:
-        - name: MYSQL_DATABASE
-          value: stationSki  
-        - name: MYSQL_ROOT_PASSWORD  
-          value: root
-        ports:
-        - containerPort: 3306
-          name: mysql-port
-      - name: backend
-        image: mohammedachref/arctic-g1-stationski:latest
-        env:
-        - name: DATABASE_URL
-          value: jdbc:mysql://mysql-service:3306/stationSki  
-        ports:
-        - containerPort: 9000
-          name: backend-port
-      - name: frontend-stationski
-        image: mohammedachref/front-g1-stationski:latest
-        ports:
-        - containerPort: 80
-          name: frontend-port
-        # Update the label for frontend
-         labels:
-          app: stationski-frontend
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_DATABASE
+              value: stationSki
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+          ports:
+            - containerPort: 3306
+              name: mysql-port
+        - name: backend
+          image: mohammedachref/arctic-g1-stationski:latest
+          env:
+            - name: DATABASE_URL
+              value: jdbc:mysql://mysql-service:3306/stationSki
+          ports:
+            - containerPort: 9000
+              name: backend-port
+        - name: frontend-stationski
+          image: mohammedachref/front-g1-stationski:latest
+          ports:
+            - containerPort: 80
+              name: frontend-port
+          labels:
+            app: stationski-frontend  # Fixed indentation of labels
 ---
 apiVersion: v1
 kind: Service
