@@ -18,7 +18,7 @@ pipeline {
         }
 
         stage('Clean and Compile') {
-            agent { label 'agent1' } // Utiliser agent1 pour cette étape
+            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Building the project with Maven'
                 // Exécutez Maven pour nettoyer et compiler
@@ -27,7 +27,7 @@ pipeline {
         }
 
         stage('Generate JaCoCo Report') {
-            agent { label 'agent1' } // Utiliser agent1 pour cette étape
+            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Generating JaCoCo report'
                 // Exécutez Maven pour générer le rapport JaCoCo
@@ -36,7 +36,7 @@ pipeline {
         }
 
         stage('Code Quality with SonarQube') {
-            agent { label 'agent1' } // Utiliser agent1 pour cette étape
+            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             environment {
                 SONAR_URL = "http://192.168.33.10:9000/"
             }
@@ -49,7 +49,7 @@ pipeline {
         }
 
         stage('Deploy to Nexus') {
-            agent { label 'agent1' } // Utiliser agent1 pour cette étape
+            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Deploying to Nexus'
                 // Using Nexus credentials
