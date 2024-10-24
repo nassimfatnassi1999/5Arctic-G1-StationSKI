@@ -22,18 +22,18 @@ pipeline {
             steps {
                 echo 'Building the project with Maven'
                 // Exécutez Maven pour nettoyer et compiler
-                sh 'mvn clean compile'
+                sh 'mvn clean install'
             }
         }
 
-        stage('Generate JaCoCo Report') {
+      /*  stage('Generate JaCoCo Report') {
             agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Generating JaCoCo report'
                 // Exécutez Maven pour générer le rapport JaCoCo
                 sh 'mvn jacoco:report'
             }
-        }
+        }*/
 
         stage('Code Quality with SonarQube') {
             agent { label 'agent_1' } // Utiliser agent1 pour cette étape
