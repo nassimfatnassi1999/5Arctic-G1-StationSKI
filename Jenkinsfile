@@ -139,17 +139,17 @@ pipeline {
             }
         }
         stage('Deploy to AKS') {
-    agent { label 'agent2' }
-    steps {
-        script {
-            def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
+             agent { label 'agent2' }
+                 steps {
+                   script {
+                    def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
 
-            if (clusterExists) {
-                echo "Cluster exists. Deploying the application and Ingress with deploy.yml."
+                    if (clusterExists) {
+                      echo "Cluster exists. Deploying the application and Ingress with deploy.yml."
 
-                // Deploying the application using kubectl and deploy.yml
-                sh '''
-                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/k8s
+                      // Deploying the application using kubectl and deploy.yml
+                     sh '''
+                       cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/k8s
                     kubectl apply -f deploy.yml
                 '''
 
@@ -180,8 +180,6 @@ pipeline {
             }
         }
     }
-}
-
  
 }
 
