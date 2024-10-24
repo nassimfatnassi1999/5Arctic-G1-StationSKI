@@ -38,7 +38,7 @@ pipeline {
         stage('Code Quality with SonarQube') {
             agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             environment {
-                SONAR_URL = "http://192.168.33.10:9000/"
+                SONAR_URL = "http://192.168.33.11:9000/"
             }
             steps {
                 withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
