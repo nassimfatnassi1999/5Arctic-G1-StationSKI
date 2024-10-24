@@ -99,12 +99,21 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.8</version> <!-- Use the latest version -->
-				<configuration>
-					<excludes>
-						<exclude>sun/**</exclude> <!-- Exclude problematic classes -->
-					</excludes>
-				</configuration>
+				<version>0.8.8</version> <!-- Assurez-vous d'utiliser la version la plus récente -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal> <!-- Prépare l'agent JaCoCo -->
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase> <!-- Exécute lors de la phase prepare-package -->
+						<goals>
+							<goal>report</goal> <!-- Génère le rapport JaCoCo -->
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
