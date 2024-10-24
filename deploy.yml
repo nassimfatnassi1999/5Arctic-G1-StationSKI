@@ -27,7 +27,7 @@ spec:
           image: mohammedachref/arctic-g1-stationski:latest
           env:
             - name: DATABASE_URL
-              value: jdbc:mysql://localhost:3306/stationSki
+              value: jdbc:mysql://mysql-service:3306/stationSki
           ports:
             - containerPort: 9000
               name: backend-port
@@ -38,7 +38,7 @@ spec:
               name: frontend-port
 
 ---
-# Service pour accéder à toutes les applications
+# Service for the frontend
 apiVersion: v1
 kind: Service
 metadata:
@@ -46,8 +46,37 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: stationski-frontend  # Updated the selector to match the frontend label
+    app: stationski-app  # Updated to match the app label in the deployment
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
+---
+# MySQL Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  type: ClusterIP
+  selector:
+    app: stationski-app  # It should select the backend container as well
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+---
+# Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: NodePort
+  selector:
+    app: stationski-app
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+      nodePort: 30100
