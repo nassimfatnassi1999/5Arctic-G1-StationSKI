@@ -1,12 +1,11 @@
-//package tn.esprit.spring.services;
+
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tn.esprit.spring.entities.Course;
@@ -15,13 +14,14 @@ import tn.esprit.spring.services.CourseServicesImpl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-public class CourseServicesImplTest {
+ class CourseServicesImplTest {
 
     @InjectMocks
     private CourseServicesImpl courseServices;
@@ -35,7 +35,7 @@ public class CourseServicesImplTest {
     }
 
     @Test
-    public void testRetrieveAllCourses() {
+     void testRetrieveAllCourses() {
         Course course1 = new Course();
         course1.setNumCourse(1L);
         course1.setLevel(3);
@@ -55,7 +55,7 @@ public class CourseServicesImplTest {
     }
 
     @Test
-    public void testAddCourse() {
+     void testAddCourse() {
         Course course = new Course();
         course.setNumCourse(1L);
         course.setLevel(3);
@@ -70,8 +70,8 @@ public class CourseServicesImplTest {
         verify(courseRepository, times(1)).save(course);
     }
 
-   /* @Test
-    public void testUpdateCourse() {
+    @Test
+     void testUpdateCourse() {
         Course course = new Course();
         course.setNumCourse(1L);
         course.setLevel(3);
@@ -87,7 +87,7 @@ public class CourseServicesImplTest {
     }
 
     @Test
-    public void testRetrieveCourse() {
+     void testRetrieveCourse() {
         Long courseId = 1L;
         Course course = new Course();
         course.setNumCourse(courseId);
@@ -104,7 +104,7 @@ public class CourseServicesImplTest {
     }
 
     @Test
-    public void testCalculateDiscount() {
+     void testCalculateDiscount() {
         Course course = new Course();
         course.setPrice(100f);
         course.setLevel(3);
@@ -115,7 +115,7 @@ public class CourseServicesImplTest {
     }
 
     @Test
-    public void testCalculateDiscountForLowerLevel() {
+     void testCalculateDiscountForLowerLevel() {
         Course course = new Course();
         course.setPrice(100f);
         course.setLevel(2);
@@ -123,5 +123,5 @@ public class CourseServicesImplTest {
         Float discountedPrice = courseServices.calculateDiscount(course);
 
         assertEquals(100f, discountedPrice);
-    }*/
+    }
 }
