@@ -59,5 +59,28 @@ pipeline {
                 }
             }
         }
+         stage('Build Docker Image') {
+                    agent { label 'agent_1' }
+                    steps {
+                        script {
+                            sh 'docker build -t arctic-g1-stationski:latest /home/vagrant/workspace/HannachiNoursine_G1_StationSKI'
+                        }
+                    }
+                }
+
+                stage('Push Docker Image to Docker Hub') {
+                    agent { label 'agent_1' }
+                    steps {
+                        script {
+                            withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                                sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                                sh 'docker tag arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                                sh 'docker push $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                            }
+                        }
+                    }
+                }
+
+
     }
 }

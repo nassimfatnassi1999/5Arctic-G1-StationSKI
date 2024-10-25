@@ -14,6 +14,7 @@ import java.util.Set;
 
 @Tag(name = "\uD83D\uDC65 Subscription Management")
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/subscription")
 @RequiredArgsConstructor
 public class SubscriptionRestController {
