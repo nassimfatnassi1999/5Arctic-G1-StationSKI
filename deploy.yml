@@ -29,7 +29,7 @@ spec:
             - name: DATABASE_URL
               value: jdbc:mysql://mysql-service:3306/stationSki
           ports:
-            - containerPort: 9000
+            - containerPort: 9001
               name: backend-port
         - name: frontend
           image: mohammedachref/front-g1-stationski:latest
@@ -77,6 +77,6 @@ spec:
     app: stationski-app
   ports:
     - protocol: TCP
-      port: 9000
-      targetPort: 9000
+      port: 9001
+      targetPort: 9001
       nodePort: 30100

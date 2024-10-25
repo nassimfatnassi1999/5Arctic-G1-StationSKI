@@ -12,7 +12,7 @@ RUN curl -o app.jar "http://192.168.33.11:8081/repository/maven-releases/tn.espr
 
 
 # Expose the port that the application runs on
-EXPOSE 9000
+EXPOSE 9001
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
