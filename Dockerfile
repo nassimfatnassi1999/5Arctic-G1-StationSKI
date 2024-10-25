@@ -2,7 +2,7 @@
 FROM eclipse-temurin:17-jre-jammy
 
 # Set working directory in the container
-WORKDIR /app
+
 
 # Download the .jar from Nexus
 RUN apt-get update && apt-get install -y curl
@@ -12,7 +12,7 @@ RUN curl -o app.jar "http://192.168.33.11:8081/repository/maven-releases/tn.espr
 
 
 # Expose the port that the application runs on
-EXPOSE 9060
+EXPOSE 9000
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
