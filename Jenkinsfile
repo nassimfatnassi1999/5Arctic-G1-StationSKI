@@ -42,35 +42,16 @@ pipeline {
         }
 
 
-        stage('Publish to Nexus Repository Manager') {
-            agent { label 'agent1' }
-            steps {
-                script {
-                    echo "Deploying to Nexus..."
-
-                    nexusArtifactUploader(
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        nexusUrl: "192.168.33.11:8081",
-                        groupId: 'tn.esprit.spring',
-                        artifactId: 'gestion-station-ski',
-                        version: '1.0',
-                        repository: "maven-releases",
-                        credentialsId: "NEXUS",
-                        artifacts: [
-                            [
-                                artifactId: 'gestion-station-ski',
-                                classifier: '',
-                                file: '/home/vagrant/workspace/5Arctic-G1-bakend/target/5Arctic-G1-StationSKI.jar',
-                                type: 'jar'
-                            ]
-                        ]
-                    )
-
-                    echo "Deployment to Nexus completed!"
+         stage('Deploy to Nexus') {
+                    agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+                    steps {
+                        echo 'Deploying to Nexus'
+                        // Using Nexus credentials
+                        withCredentials([usernamePassword(credentialsId: 'NEXUS', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                            sh 'mvn deploy -DskipTests=true -Dnexus.username=$NEXUS_USER -Dnexus.password=$NEXUS_PASS'
+                        }
+                    }
                 }
-            }
-        }
 
         stage('Build Docker Image') {
             agent { label 'agent1' }
