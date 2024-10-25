@@ -28,23 +28,7 @@ pipeline {
                 '''
             }
         }
-        /*stage('Static Analysis') {
-            agent { label 'agent1' }
-            environment {
-                SONAR_URL = "http://192.168.33.11:9000/"
-            }
-            steps {
-                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
-                    sh '''
-                         mvn sonar:sonar \
-                        -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.host.url=${SONAR_URL} \
-                        -Dsonar.java.binaries=target/classes \
-                        -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
-                    '''
-                }
-            }
-        }*/
+        
         stage('Static Analysis SonarCloud') {
             agent { label 'agent1' }
             environment {
@@ -113,7 +97,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('Trivy Scan') {
             agent { label 'agent1' }
             steps {
@@ -122,7 +106,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('Push Docker Image') {
             agent { label 'agent1' }
             environment {
@@ -138,24 +122,19 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to AKS') {
-             agent { label 'agent2' }
-                 steps {
-                   script {
-                    def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
+stage('Deploy to AKS With Helm') {
+    agent { label 'agent2' }
+    steps {
+        script {
+            def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
 
-                    if (clusterExists) {
-                      echo "Cluster exists. Deploying the application and Ingress with deploy.yml."
+            if (clusterExists) {
+                echo "Cluster exists. Deploying the application with Helm."
 
-                      // Deploying the application using kubectl and deploy.yml
-                     sh '''
-                       cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/k8s
-                    kubectl apply -f deploy.yml
-                '''
-
-                // Apply the Ingress resource
+                // Deploy the application using Helm
                 sh '''
-                    kubectl apply -f ingress.yml
+                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
+                    helm upgrade --install stationski . --namespace stationski --create-namespace
                 '''
             } else {
                 echo "Cluster does not exist. Creating with Terraform."
@@ -167,19 +146,16 @@ pipeline {
                 sleep 60
                 sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
 
-                // Deploying the application using kubectl and deploy.yml
+                // Deploy the application using Helm
                 sh '''
-                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/k8s
-                    kubectl apply -f deploy.yml
-                '''
-
-                // Apply the Ingress resource
-                sh '''
-                    kubectl apply -f ingress.yml
+                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
+                    helm upgrade --install stationski . --namespace stationski --create-namespace
                 '''
             }
         }
     }
+}
+
  
 }
 
