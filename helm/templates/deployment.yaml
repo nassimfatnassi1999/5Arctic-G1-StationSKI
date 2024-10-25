@@ -22,12 +22,16 @@ spec:
           value: {{ .Values.mysql.rootPassword }}
         ports:
         - containerPort: {{ .Values.mysql.servicePort }}
+        # Adding app label for service selector
+        metadata:
+          labels:
+            app: mysql
 
       - name: backend
         image: {{ .Values.backend.image }}
         env:
-        - name: DATABASE_URL
-          value: jdbc:mysql://mysql-service:3306/{{ .Values.mysql.database }}  
+        - name: databaseUrl
+          value: jdbc:mysql://mysql-service:3306/{{ .Values.mysql.database }}
         ports:
         - containerPort: {{ .Values.backend.servicePort }}
 
