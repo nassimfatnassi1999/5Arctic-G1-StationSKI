@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stationski-app  
+      app: stationski-app
   template:
     metadata:
       labels:
-        app: stationski-app  
+        app: stationski-app
     spec:
       containers:
       - name: mysql
@@ -27,18 +27,18 @@ spec:
         image: fatnassihnifinassim353/nassimfatnassi-g1-stationski:latest
         env:
         - name: DATABASE_URL
-          value: jdbc:mysql://localhost:3306/stationSki  
+          value: jdbc:mysql://stationski-service:3306/stationSki  
         ports:
         - containerPort: 9000
           name: backend-port
       - name: frontend
-        image: fatnassihnifinassim353/front-g1-stationski:latest 
+        image: fatnassihnifinassim353/front-g1-stationski:latest
         ports:
         - containerPort: 80
           name: frontend-port
 
 ---
-# Service pour accéder à toutes les applications
+# Service pour stationski-app
 apiVersion: v1
 kind: Service
 metadata:
@@ -49,11 +49,14 @@ spec:
     app: stationski-app
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 3306
+      targetPort: 3306
+      name: mysql
     - protocol: TCP
       port: 9000
       targetPort: 9000
+      name: backend
     - protocol: TCP
-      port: 3306
-      targetPort: 3306
+      port: 80
+      targetPort: 80
+      name: frontend
