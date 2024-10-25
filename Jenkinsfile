@@ -26,14 +26,14 @@ pipeline {
             }
         }
 
-      /*  stage('Generate JaCoCo Report') {
+        stage('Generate JaCoCo Report') {
             agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Generating JaCoCo report'
                 // Exécutez Maven pour générer le rapport JaCoCo
                 sh 'mvn jacoco:report'
             }
-        }*/
+        }
 
         stage('Code Quality with SonarQube') {
             agent { label 'agent_1' } // Utiliser agent1 pour cette étape
