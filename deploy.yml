@@ -27,7 +27,7 @@ spec:
           image: mohammedachref/arctic-g1-stationski:latest
           env:
             - name: DATABASE_URL
-              value: jdbc:mysql://mysql-service:3306/stationSki
+              value: jdbc:mysql://localhost:3306/stationSki
           ports:
             - containerPort: 9001
               name: backend-port
