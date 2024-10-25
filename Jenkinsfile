@@ -97,7 +97,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('Trivy Scan') {
             agent { label 'agent1' }
             steps {
@@ -106,7 +106,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('Push Docker Image') {
             agent { label 'agent1' }
             environment {
