@@ -43,7 +43,7 @@ pipeline {
 
 
          stage('Deploy to Nexus') {
-                    agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+                    agent { label 'agent1' } // Utiliser agent1 pour cette étape
                     steps {
                         echo 'Deploying to Nexus'
                         // Using Nexus credentials
