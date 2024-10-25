@@ -102,7 +102,7 @@ pipeline {
             agent { label 'agent1' }
             steps {
                 script {
-                    sh 'trivy image --scanners vuln --skip-db-update --timeout 600s ${DOCKER_IMAGE}:${IMAGE_TAG}'
+                    sh 'trivy image --scanners vuln --skip-db-update --skip-java-db-update --timeout 600s ${DOCKER_IMAGE}:${IMAGE_TAG}'
                 }
             }
         }
