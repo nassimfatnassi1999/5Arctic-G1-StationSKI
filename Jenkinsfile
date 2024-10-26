@@ -134,7 +134,7 @@ stage('Deploy to AKS With Helm') {
                 // Deploy the application using Helm
                 sh '''
                     cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
-                    helm upgrade --install stationski . --namespace stationski --create-namespace
+                    helm upgrade --install stationski . 
                 '''
             } else {
                 echo "Cluster does not exist. Creating with Terraform."
@@ -149,7 +149,7 @@ stage('Deploy to AKS With Helm') {
                 // Deploy the application using Helm
                 sh '''
                     cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
-                    helm upgrade --install stationski . --namespace stationski --create-namespace
+                    helm upgrade --install stationski . 
                 '''
             }
         }
