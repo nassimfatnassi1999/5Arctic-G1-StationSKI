@@ -1,54 +1,35 @@
+# templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-backend
+  name: stationski-app
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: backend
+      app: stationski-app
   template:
     metadata:
       labels:
-        app: backend
+        app: stationski-app
     spec:
       containers:
       - name: mysql
         image: {{ .Values.mysql.image }}
         env:
-        - name: MYSQL_DATABASE
-          value: {{ .Values.mysql.database }}
-        - name: MYSQL_ROOT_PASSWORD
-          value: {{ .Values.mysql.rootPassword }}
+          - name: MYSQL_DATABASE
+            value: {{ .Values.mysql.database }}
+          - name: MYSQL_ROOT_PASSWORD
+            value: {{ .Values.mysql.rootPassword }}
         ports:
-        - containerPort: {{ .Values.mysql.servicePort }}
-        # Remove metadata section from here
+          - containerPort: {{ .Values.mysql.servicePort }}
+            name: mysql-port
 
       - name: backend
         image: {{ .Values.backend.image }}
         env:
-        - name: databaseUrl
-          value: jdbc:mysql://mysql-service:3306/{{ .Values.mysql.database }}
+          - name: DATABASE_URL
+            value: {{ .Values.backend.databaseUrl }}
         ports:
-        - containerPort: {{ .Values.backend.servicePort }}
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Release.Name }}-frontend
-spec:
-  replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      app: frontend
-  template:
-    metadata:
-      labels:
-        app: frontend
-    spec:
-      containers:
-      - name: frontend
-        image: {{ .Values.frontend.image }}
-        ports:
-        - containerPort: {{ .Values.frontend.servicePort }}
+          - containerPort: {{ .Values.backend.servicePort }}
+            name: backend-port
