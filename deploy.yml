@@ -31,26 +31,21 @@ spec:
           ports:
             - containerPort: 9001
               name: backend-port
-        - name: frontend
-          image: mohammedachref/front-g1-stationski:latest
-          ports:
-            - containerPort: 80
-              name: frontend-port
 
 ---
 # Service for the frontend
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: backend-service
 spec:
   type: LoadBalancer
   selector:
     app: stationski-app  # Updated to match the app label in the deployment
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 9001
+      targetPort: 9001
 ---
 # MySQL Service
 apiVersion: v1
@@ -66,16 +61,3 @@ spec:
       port: 3306
       targetPort: 3306
 ---
-# Backend Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-service
-spec:
-  selector:
-    app: stationski-app  # Assurez-vous que cela correspond à votre label de pod
-  ports:
-    - protocol: TCP
-      port: 9001          # Le port sur lequel le service sera exposé
-      targetPort: 9001    # Le port sur lequel votre application backend écoute
-  type: ClusterIP  # C'est le type par défaut
