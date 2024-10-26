@@ -75,10 +75,11 @@ pipeline {
             }
         }
         stage('Trivy Security Scan') {
+                    agent { label 'agent1' }
                     steps {
                         script {
                             // Run Trivy scan
-                            sh "trivy image tag arctic-g1-stationski:latest >trivyimage.text"
+                            sh "trivy mohammedachref/arctic-g1-stationski:latest >trivyimage.text"
                         }
                     }
                 }
