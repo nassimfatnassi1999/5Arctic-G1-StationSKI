@@ -74,15 +74,15 @@ pipeline {
                 }
             }
         }
-        stage('Trivy Security Scan') {
-                    agent { label 'agent1' }
-                    steps {
-                        script {
-                            // Run Trivy scan
-                            sh "trivy image mohammedachref/arctic-g1-stationski:latest >trivyimage.text"
-                        }
-                    }
-                }
+       stage('Trivy Security Scan') {
+           steps {
+               script {
+                   // Run Trivy scan using offline mode
+                   sh "trivy image --offline-scan mohammedachref/arctic-g1-stationski:latest"
+               }
+           }
+       }
+
 
         stage('Deploy to AKS') {
             agent { label 'agent1' }
