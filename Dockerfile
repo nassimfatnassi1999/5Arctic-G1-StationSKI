@@ -14,5 +14,10 @@ RUN apk add --no-cache curl && \
 # Expose the application port
 EXPOSE 9000
 
-# Run the Spring Boot application
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+#FROM openjdk:17-jdk-alpine
+#WORKDIR /app
+#COPY target/*.jar app.jar
+#EXPOSE 9000
+#ENTRYPOINT ["java", "-jar", "app.jar"]
