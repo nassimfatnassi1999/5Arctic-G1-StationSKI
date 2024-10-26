@@ -72,11 +72,10 @@ kind: Service
 metadata:
   name: backend-service
 spec:
-  type: NodePort
   selector:
-    app: stationski-app
+    app: stationski-app  # Assurez-vous que cela correspond à votre label de pod
   ports:
     - protocol: TCP
-      port: 9001
-      targetPort: 9001
-      nodePort: 30100
+      port: 9001          # Le port sur lequel le service sera exposé
+      targetPort: 9001    # Le port sur lequel votre application backend écoute
+  type: ClusterIP  # C'est le type par défaut
