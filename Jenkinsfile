@@ -153,6 +153,13 @@ stage('Deploy to AKS With Helm') {
                 '''
             }
         }
+        // Get LoadBalancer IP of the backend service
+            def backendIP = sh(
+                script: "kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'",
+                returnStdout: true
+            ).trim()
+            
+            env.BACKEND_IP = backendIP
     }
 }
 
@@ -163,7 +170,7 @@ stage('Deploy to AKS With Helm') {
         success {
             script {
                 slackSend(channel: '#jenkins-messg', 
-                          message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully.")
+                          message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}")
             }
         }
         failure {
