@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-         stage('Clean, Build & Test') {
+        stage('Clean, Build & Test') {
             agent { label 'agent1' }
             steps {
                 sh '''
@@ -32,7 +32,7 @@ pipeline {
         stage('Static Analysis SonarCloud') {
             agent { label 'agent1' }
             environment {
-            SONAR_URL = "https://sonarcloud.io" // URL de SonarCloud
+                SONAR_URL = "https://sonarcloud.io" // URL de SonarCloud
             }
             steps {
                 withCredentials([string(credentialsId: 'sonar-cloud-credentials', variable: 'SONAR_TOKEN')]) {
@@ -43,12 +43,10 @@ pipeline {
                         -Dsonar.java.binaries=target/classes \
                         -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
                         -Dsonar.organization=nassimfatnassi1999
-                        '''
+                    '''
                 }
             }
         }
-
-
 
         stage('Upload to Nexus') {
             agent { label 'agent1' }
@@ -97,16 +95,7 @@ pipeline {
                 }
             }
         }
-/*
-        stage('Trivy Scan') {
-            agent { label 'agent1' }
-            steps {
-                script {
-                    sh 'trivy image --scanners vuln --timeout 600s ${DOCKER_IMAGE}:${IMAGE_TAG}'
-                }
-            }
-        }
-*/
+
         stage('Push Docker Image') {
             agent { label 'agent1' }
             environment {
@@ -122,61 +111,65 @@ pipeline {
                 }
             }
         }
-stage('Deploy to AKS With Helm') {
-    agent { label 'agent2' }
-    steps {
-        script {
-            def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
 
-            if (clusterExists) {
-                echo "Cluster exists. Deploying the application with Helm."
+        stage('Deploy to AKS With Helm') {
+            agent { label 'agent2' }
+            steps {
+                script {
+                    def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
 
-                // Deploy the application using Helm
-                sh '''
-                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
-                    helm upgrade --install stationski . 
-                '''
-            } else {
-                echo "Cluster does not exist. Creating with Terraform."
-                sh '''
-                    cd /home/vagrant/myAks-cluster
-                    terraform init
-                    terraform apply -auto-approve
-                '''
-                sleep 60
-                sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
+                    if (clusterExists) {
+                        echo "Cluster exists. Deploying the application with Helm."
 
-                // Deploy the application using Helm
-                sh '''
-                    cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
-                    helm upgrade --install stationski . 
-                '''
+                        // Deploy the application using Helm
+                        sh '''
+                            cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
+                            helm upgrade --install stationski . 
+                        '''
+                    } else {
+                        echo "Cluster does not exist. Creating with Terraform."
+                        sh '''
+                            cd /home/vagrant/myAks-cluster
+                            terraform init
+                            terraform apply -auto-approve
+                        '''
+                        sleep 60
+                        sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
+
+                        // Deploy the application using Helm
+                        sh '''
+                            cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
+                            helm upgrade --install stationski . 
+                        '''
+                    }
+
+                    // Get LoadBalancer IP of the backend service
+                    def backendIP = sh(
+                        script: "kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'",
+                        returnStdout: true
+                    ).trim()
+                    
+                    env.BACKEND_IP = backendIP
+                }
             }
         }
-        // Get LoadBalancer IP of the backend service
-            def backendIP = sh(
-                script: "kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'",
-                returnStdout: true
-            ).trim()
-            
-            env.BACKEND_IP = backendIP
     }
-}
 
- 
-
-    }
     post {
         success {
             script {
-                slackSend(channel: '#jenkins-messg', 
-                          message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}")
+                slackSend(
+                    channel: '#jenkins-messg', 
+                    message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}"
+                )
             }
         }
         failure {
             script {
-                slackSend(channel: '#jenkins-messg', 
-                          message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
+                slackSend(
+                    channel: '#jenkins-messg', 
+                    message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
+                )
             }
         }
     }
