@@ -79,7 +79,7 @@ pipeline {
                     steps {
                         script {
                             // Run Trivy scan
-                            sh "trivy mohammedachref/arctic-g1-stationski:latest >trivyimage.text"
+                            sh "trivy image mohammedachref/arctic-g1-stationski:latest >trivyimage.text"
                         }
                     }
                 }
