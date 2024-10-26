@@ -74,6 +74,14 @@ pipeline {
                 }
             }
         }
+        stage('Trivy Security Scan') {
+                    steps {
+                        script {
+                            // Run Trivy scan
+                            sh "trivy image tag arctic-g1-stationski:latest >trivyimage.text"
+                        }
+                    }
+                }
 
         stage('Deploy to AKS') {
             agent { label 'agent1' }
