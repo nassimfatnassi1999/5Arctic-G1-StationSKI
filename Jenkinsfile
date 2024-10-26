@@ -145,11 +145,11 @@ pipeline {
 
                     // Get LoadBalancer IP of the backend service
                     def backendIP = sh(
-                        script: "kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'",
+                     script: "kubectl get svc backend-service | awk '/backend-service/ {print \$4}'",
                         returnStdout: true
                     ).trim()
-                    
                     env.BACKEND_IP = backendIP
+
                 }
             }
         }
