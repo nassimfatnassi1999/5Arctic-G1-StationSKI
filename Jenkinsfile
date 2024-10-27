@@ -107,6 +107,24 @@ pipeline {
                 }
             }
         }
+        stage('Monitor with Prometheus') {
+            agent { label 'agent1' }
+            steps {
+                script {
+                    // Créer un namespace pour la surveillance
+                   // sh 'kubectl create namespace monitoring || true'
+
+                    // Appliquer les fichiers de configuration pour Prometheus
+                    sh '''
+                        kubectl apply -f prometheus-config.yaml
+                        kubectl apply -f prometheus-deployment.yaml
+                    '''
+
+                    echo "Prometheus monitoring deployed successfully."
+                }
+            }
+        }
+
     }
 
     post {
