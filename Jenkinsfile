@@ -96,7 +96,14 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Scan with Trivy') {
+            steps {
+                script {
+                    sh 'trivy image --scanners vuln --timeout 3600s -f json -o trivy_report.json ${DOCKER_IMAGE}:${IMAGE_TAG}'
+                }
+            }
+        }
+         stage('Push Docker Image') {
             agent { label 'agent1' }
             environment {
                 DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
@@ -112,7 +119,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to AKS With Helm') {
+        /*stage('Deploy to AKS With Helm') {
             agent { label 'agent2' }
             steps {
                 script {
@@ -142,7 +149,7 @@ pipeline {
                             helm upgrade --install stationski . 
                         '''
                     }
-
+                     sleep 70
                     // Get LoadBalancer IP of the backend service
                     def backendIP = sh(
                      script: "kubectl get svc backend-service | awk '/backend-service/ {print \$4}'",
@@ -152,25 +159,26 @@ pipeline {
 
                 }
             }
-        }
+        }*/
     }
 
-    post {
-        success {
-            script {
-                slackSend(
-                    channel: '#jenkins-messg', 
-                    message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}"
-                )
-            }
-        }
-        failure {
-            script {
-                slackSend(
-                    channel: '#jenkins-messg', 
-                    message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
-                )
-            }
+  post {
+    success {
+        script {
+            slackSend(
+                channel: '#jenkins-messg', 
+                message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}"
+            )
         }
     }
+    failure {
+        script {
+            slackSend(
+                channel: '#jenkins-messg', 
+                message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
+            )
+        }
+    }
+}
+
 }
