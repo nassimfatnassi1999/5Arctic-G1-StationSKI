@@ -97,6 +97,7 @@ pipeline {
         }
 
         stage('Scan with Trivy') {
+            agent { label 'agent1' }
             steps {
                 script {
                     sh 'trivy image --scanners vuln --timeout 3600s -f json -o trivy_report.json ${DOCKER_IMAGE}:${IMAGE_TAG}'
