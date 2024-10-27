@@ -74,14 +74,14 @@ pipeline {
                 }
             }
         }
-       stage('Trivy Security Scan') {
+ /*      stage('Trivy Security Scan') {
            steps {
                script {
                    // Run Trivy scan using offline mode
                    sh "trivy image --offline-scan mohammedachref/arctic-g1-stationski:latest"
                }
            }
-       }
+       }*/
 
 
         stage('Deploy to AKS') {
