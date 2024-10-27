@@ -1,23 +1,87 @@
+
 pipeline {
-    agent any
+    agent any // Agent par défaut pour le pipeline
+    tools {
+        jdk 'JAVA_HOME'
+        maven 'M2_HOME'
+    }
+
     stages {
-        stage('Maven Build') {
+        stage('Clone Repository') {
             steps {
-                script {
-                    // Compile le projet avec Maven
-                    sh 'mvn clean install'
+                echo 'Cloning the GitHub repository'
+                // Get code from the GitHub repository
+                git(
+                    url: 'https://github.com/nassimfatnassi1999/5Arctic-G1-StationSKI.git',
+                    branch: 'ManaiManai_G1_StationSKI'
+                )
+            }
+        }
+
+        stage('Clean and Compile') {
+          //  agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+            steps {
+                echo 'Building the project with Maven'
+                // Exécutez Maven pour nettoyer et compiler
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Generate JaCoCo Report') {
+           // agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+            steps {
+                echo 'Generating JaCoCo report'
+                // Exécutez Maven pour générer le rapport JaCoCo
+                sh 'mvn jacoco:report'
+            }
+        }
+
+        stage('Code Quality with SonarQube') {
+          //  agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+            environment {
+                SONAR_URL = "http://192.168.50.4:9000/"
+            }
+            steps {
+                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
+                    echo 'Running SonarQube analysis'
+                    sh "mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=$SONAR_URL \
+                     -Dsonar.coverage.jacoco.xmlReportPaths=/home/vagrant/workspace/ManaiMaram_G1_StationSKI/target/site/jacoco/jacoco.xml"
                 }
             }
         }
-        stage('SonarQube Analysis') {
+
+      /*  stage('Deploy to Nexus') {
+            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
-                script {
-                    // Analyse le code avec SonarQube
-                    withSonarQubeEnv('SonarQube') { // 'SonarQube' correspond au nom de l'installation SonarQube configurée dans Jenkins
-                        sh 'mvn sonar:sonar'
+                echo 'Deploying to Nexus'
+                // Using Nexus credentials
+                withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                    sh 'mvn deploy -DskipTests=true -Dnexus.username=$NEXUS_USER -Dnexus.password=$NEXUS_PASS'
+                }
+            }
+        }
+         stage('Build Docker Image') {
+                    agent { label 'agent_1' }
+                    steps {
+                        script {
+                            sh 'docker build -t arctic-g1-stationski:latest /home/vagrant/workspace/HannachiNoursine_G1_StationSKI'
+                        }
                     }
                 }
-            }
-        }
+
+                stage('Push Docker Image to Docker Hub') {
+                    agent { label 'agent_1' }
+                    steps {
+                        script {
+                            withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                                sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                                sh 'docker tag arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                                sh 'docker push $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                            }
+                        }
+                    }
+                }*/
+
+
     }
 }
