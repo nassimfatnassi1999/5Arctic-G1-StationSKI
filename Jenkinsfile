@@ -45,7 +45,7 @@ pipeline {
                 SONAR_URL = "http://192.168.50.4:9000/"
             }
             steps {
-                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
+                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
                     echo 'Running SonarQube analysis'
                     sh "mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=$SONAR_URL \
                      -Dsonar.coverage.jacoco.xmlReportPaths=/home/vagrant/workspace/ManaiMaram_G1_StationSKI/target/site/jacoco/jacoco.xml"
