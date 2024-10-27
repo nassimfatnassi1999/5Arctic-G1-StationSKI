@@ -112,12 +112,12 @@ pipeline {
             steps {
                 script {
                     // Créer un namespace pour la surveillance
-                   // sh 'kubectl create namespace monitoring || true'
+                    sh 'kubectl create namespace monitoring || true'
 
                     // Appliquer les fichiers de configuration pour Prometheus
                     sh '''
-                        kubectl apply -f prometheus-config.yaml
-                        kubectl apply -f prometheus-deployment.yaml
+                        kubectl apply -f prometheus-config.yaml -n monitoring
+                        kubectl apply -f prometheus-deployment.yaml -n monitoring
                     '''
 
                     echo "Prometheus monitoring deployed successfully."
