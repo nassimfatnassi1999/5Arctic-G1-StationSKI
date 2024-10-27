@@ -13,7 +13,7 @@ pipeline {
                 // Get code from the GitHub repository
                 git(
                     url: 'https://github.com/nassimfatnassi1999/5Arctic-G1-StationSKI.git',
-                    branch: 'ManaiManai_G1_StationSKI'
+                    branch: 'ManaiMaram_G1_StationSKI'
                 )
             }
         }
