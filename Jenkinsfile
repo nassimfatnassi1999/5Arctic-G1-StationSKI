@@ -49,11 +49,18 @@ pipeline {
             environment {
                 SONAR_URL = "http://192.168.33.11:9000/"
             }
-            steps {
-                withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
-                    sh "mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=${SONAR_URL} -Dsonar.java.binaries=target/classes"
+   steps {
+                script {
+                    withSonarQubeEnv("${SONARQUBE_ENV}") {
+                        sh """
+                            mvn sonar:sonar \
+                            -Dsonar.login=${SONAR_TOKEN} \
+                            -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
+                        """
+                    }
                 }
             }
+            
         }
 
         stage('Upload to Nexus') {
