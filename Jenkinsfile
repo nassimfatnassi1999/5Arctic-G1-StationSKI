@@ -19,6 +19,7 @@ pipeline {
         }
 
         stage('Clean and Compile') {
+        agent any
           //  agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Building the project with Maven'
@@ -28,6 +29,7 @@ pipeline {
         }
 
         stage('Generate JaCoCo Report') {
+        agent any
            // agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Generating JaCoCo report'
@@ -37,6 +39,7 @@ pipeline {
         }
 
         stage('Code Quality with SonarQube') {
+        agent any
           //  agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             environment {
                 SONAR_URL = "http://192.168.50.4:9000/"
