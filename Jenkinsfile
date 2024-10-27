@@ -28,7 +28,7 @@ pipeline {
             }
         }
 
-        stage('Generate JaCoCo Report') {
+      /*  stage('Generate JaCoCo Report') {
         agent any
            // agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
@@ -36,7 +36,7 @@ pipeline {
                 // Exécutez Maven pour générer le rapport JaCoCo
                 sh 'mvn jacoco:report'
             }
-        }
+        }*/
 
         stage('Code Quality with SonarQube') {
         agent any
