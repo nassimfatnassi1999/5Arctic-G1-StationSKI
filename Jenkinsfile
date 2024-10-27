@@ -1,5 +1,10 @@
 pipeline {
     agent { label 'agent1' }
+    environment {
+        SONARQUBE_ENV = 'sonarqube'
+        SONAR_TOKEN = credentials('sonar-credentials')  
+    }
+
     tools {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
@@ -45,11 +50,9 @@ pipeline {
             }
         }
 
-        stage('Static Analysis') {
-            environment {
-                SONAR_URL = "http://192.168.33.11:9000/"
-            }
-   steps {
+       stage('SonarQube Analysis') {
+            agent { label 'agent1' }
+            steps {
                 script {
                     withSonarQubeEnv("${SONARQUBE_ENV}") {
                         sh """
@@ -60,7 +63,6 @@ pipeline {
                     }
                 }
             }
-            
         }
 
         stage('Upload to Nexus') {
