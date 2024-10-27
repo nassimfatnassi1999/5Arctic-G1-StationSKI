@@ -58,7 +58,7 @@ pipeline {
                         sh """
                             mvn sonar:sonar \
                             -Dsonar.login=${SONAR_TOKEN} \
-                            -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
+                            -Dsonar.coverage.jacoco.xmlReportPaths=/home/vagrant/jenkins-agent1/workspace/5arctic4-G1-StationSki-Backend/target/site/jacoco/jacoco.xml
                         """
                     }
                 }
