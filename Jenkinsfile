@@ -75,6 +75,7 @@ pipeline {
             }
         }
       stage('Trivy Security Scan') {
+           agent { label 'agent1' }
            steps {
                script {
                    // Run Trivy scan using offline mode
