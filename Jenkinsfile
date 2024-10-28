@@ -42,6 +42,7 @@ pipeline {
                         -Dsonar.host.url=${SONAR_URL} \
                         -Dsonar.java.binaries=target/classes \
                         -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+                         -Dsonar.projectKey=nassim Fatnassi Hnifi_5Arctic-G1-StationSKI \
                         -Dsonar.organization=nassimfatnassi1999
                     '''
                 }
