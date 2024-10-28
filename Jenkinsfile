@@ -79,7 +79,7 @@ pipeline {
            steps {
                script {
                    // Run Trivy scan using offline mode
-                   sh "trivy image --scanners vuln mohammedachref/arctic-g1-stationski:latest"
+                   sh "trivy image  mohammedachref/arctic-g1-stationski:latest"
                }
            }
        }
