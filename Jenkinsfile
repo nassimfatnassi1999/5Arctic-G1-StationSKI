@@ -42,8 +42,10 @@ pipeline {
                         -Dsonar.host.url=${SONAR_URL} \
                         -Dsonar.java.binaries=target/classes \
                         -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-                         -Dsonar.projectKey=5Arctic-G1-StationSKI \
-                        -Dsonar.organization=nassimfatnassi1999
+                        -Dsonar.projectKey=5Arctic-G1-StationSKI \
+                        -Dsonar.organization=nassimfatnassi1999 \
+                        -Dsonar.inclusions=/src/main/java/tn/esprit/spring/services/PisteServicesImpl.java,/src/main/java/tn/esprit/spring/services/SubscriptionServicesImpl.java \
+                        -Dsonar.test.inclusions=/src/test/java/tn/esprit/spring/services/PisteServicesImplTest.java,/src/main/java/tn/esprit/spring/services/SubscriptionServicesImplTest.java
                     '''
                 }
             }
