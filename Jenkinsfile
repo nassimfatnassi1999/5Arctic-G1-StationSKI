@@ -89,7 +89,7 @@ pipeline {
         }
 
         stage('Deploy to AKS') {
-            agent { label 'agent_1' }
+            agent { label 'agent2' }
             steps {
                 echo 'Deploying to AKS'
                 script {
