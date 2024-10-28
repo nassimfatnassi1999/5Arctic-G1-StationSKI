@@ -1,5 +1,6 @@
 pipeline {
-    agent any // Agent par défaut pour le pipeline
+    agent any // Default agent for the pipeline
+
     tools {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
@@ -18,39 +19,43 @@ pipeline {
         }
 
         stage('Clean and Compile') {
-            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+            agent { label 'agent_1' } // Use agent_1 for this stage
             steps {
                 echo 'Building the project with Maven'
-                // Exécutez Maven pour nettoyer et compiler
+                // Execute Maven to clean and compile
                 sh 'mvn clean install'
             }
         }
 
         stage('Generate JaCoCo Report') {
-            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+            agent { label 'agent_1' } // Use agent_1 for this stage
             steps {
                 echo 'Generating JaCoCo report'
-                // Exécutez Maven pour générer le rapport JaCoCo
+                // Execute Maven to generate the JaCoCo report
                 sh 'mvn jacoco:report'
             }
         }
 
         stage('Code Quality with SonarQube') {
-            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+            agent { label 'agent_1' } // Use agent_1 for this stage
             environment {
                 SONAR_URL = "http://192.168.33.11:9000/"
             }
             steps {
                 withCredentials([string(credentialsId: 'sonar-credentials', variable: 'SONAR_TOKEN')]) {
                     echo 'Running SonarQube analysis'
-                    sh "mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=$SONAR_URL \
-                     -Dsonar.coverage.jacoco.xmlReportPaths=/home/vagrant/workspace/HannachiNoursine_G1_StationSKI/target/site/jacoco/jacoco.xml"
+                    sh """
+                        mvn sonar:sonar \
+                        -Dsonar.token=${SONAR_TOKEN} \
+                        -Dsonar.host.url=${SONAR_URL} \
+                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                    """
                 }
             }
         }
 
         stage('Deploy to Nexus') {
-            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+            agent { label 'agent_1' } // Use agent_1 for this stage
             steps {
                 echo 'Deploying to Nexus'
                 // Using Nexus credentials
@@ -59,44 +64,46 @@ pipeline {
                 }
             }
         }
-         stage('Build Docker Image') {
-                    agent { label 'agent_1' }
-                    steps {
-                        script {
-                            sh 'docker build -t arctic-g1-stationski:latest /home/vagrant/workspace/HannachiNoursine_G1_StationSKI'
-                        }
-                    }
-                }
 
-                stage('Push Docker Image to Docker Hub') {
-                    agent { label 'agent_1' }
-                    steps {
-                        script {
-                            withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                                sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                                sh 'docker tag arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
-                                sh 'docker push $DOCKER_USERNAME/arctic-g1-stationski:latest'
-                            }
-                        }
-                    }
+        stage('Build Docker Image') {
+            agent { label 'agent_1' }
+            steps {
+                script {
+                    sh 'docker build -t arctic-g1-stationski:latest /home/vagrant/workspace/HannachiNoursine_G1_StationSKI'
                 }
-
-post {
-    success {
-        script {
-            slackSend(
-                channel: '#jenkins_noursine',
-                message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}"
-            )
+            }
         }
-    }
-    failure {
-        script {
-            slackSend(
-                channel: '#jenkins_noursine',
-                message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
-            )
+
+        stage('Push Docker Image to Docker Hub') {
+            agent { label 'agent_1' }
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh 'docker tag arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                        sh 'docker push $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                    }
+                }
+            }
         }
     }
 
+    post {
+        success {
+            script {
+                slackSend(
+                    channel: '#jenkins_noursine',
+                    message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: arctic-g1-stationski:latest successfully. Backend IP: ${env.BACKEND_IP}"
+                )
+            }
+        }
+        failure {
+            script {
+                slackSend(
+                    channel: '#jenkins_noursine',
+                    message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
+                )
+            }
+        }
+    }
 }
