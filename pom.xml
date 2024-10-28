@@ -15,7 +15,8 @@
     <name>5Arctic-G1-StationSKI</name>
     <description>Demo project for Spring Boot</description>
     <properties>
-        <java.version>17</java.version> <!-- Update this line to Java 17 -->
+        <java.version>17</java.version>
+        <spring-boot.version>2.6.9</spring-boot.version> <!-- Add Spring Boot version -->
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
     </properties>
     <dependencies>
