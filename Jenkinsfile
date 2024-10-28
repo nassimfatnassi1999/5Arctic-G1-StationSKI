@@ -5,7 +5,10 @@ pipeline {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
-
+ environment {
+        DOCKER_IMAGE = 'manaimaram-g1-stationski'  // Dynamic Docker image name
+        IMAGE_TAG = 'latest'  // Image tag (e.g., 'latest' or version)
+    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -30,7 +33,6 @@ pipeline {
 
       /*  stage('Generate JaCoCo Report') {
         agent any
-           // agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Generating JaCoCo report'
                 // Exécutez Maven pour générer le rapport JaCoCo
@@ -40,7 +42,6 @@ pipeline {
 
         stage('Code Quality with SonarQube') {
         agent any
-          //  agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             environment {
                 SONAR_URL = "http://192.168.50.4:9000/"
             }
@@ -54,8 +55,6 @@ pipeline {
         }
 
         stage('Deploy to Nexus') {
-        agent any
-          //  agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Deploying to Nexus'
                 // Using Nexus credentials
@@ -64,27 +63,39 @@ pipeline {
                 }
             }
         }
- /*        stage('Build Docker Image') {
-                    agent { label 'agent_1' }
-                    steps {
-                        script {
-                            sh 'docker build -t arctic-g1-stationski:latest /home/vagrant/workspace/HannachiNoursine_G1_StationSKI'
-                        }
-                    }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def nexusUrl = "http://192.168.50.4:8081"
+                    def groupId = "tn.esprit.spring"
+                    def artifactId = "gestion-station-ski"
+                    def version = "1.0"
+
+                    sh """
+                        docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
+                        --build-arg NEXUS_URL=${nexusUrl} \
+                        --build-arg GROUP_ID=${groupId} \
+                        --build-arg ARTIFACT_ID=${artifactId} \
+                        --build-arg VERSION=${version} .
+                    """
                 }
+            }
+        }
+
+                  
 
                 stage('Push Docker Image to Docker Hub') {
-                    agent { label 'agent_1' }
+               
                     steps {
                         script {
-                            withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                                 sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                                 sh 'docker tag arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
                                 sh 'docker push $DOCKER_USERNAME/arctic-g1-stationski:latest'
                             }
                         }
                     }
-                }*/
+               
 
 
     }
