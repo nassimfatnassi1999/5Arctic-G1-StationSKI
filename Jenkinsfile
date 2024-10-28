@@ -30,7 +30,6 @@ pipeline {
 
       /*  stage('Generate JaCoCo Report') {
         agent any
-           // agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Generating JaCoCo report'
                 // Exécutez Maven pour générer le rapport JaCoCo
@@ -40,7 +39,6 @@ pipeline {
 
         stage('Code Quality with SonarQube') {
         agent any
-          //  agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             environment {
                 SONAR_URL = "http://192.168.50.4:9000/"
             }
@@ -54,7 +52,6 @@ pipeline {
         }
 
         stage('Deploy to Nexus') {
-            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Deploying to Nexus'
                 // Using Nexus credentials
@@ -64,10 +61,9 @@ pipeline {
             }
         }
          stage('Build Docker Image') {
-                    agent { label 'agent_1' }
                     steps {
                         script {
-                            sh 'docker build -t arctic-g1-stationski:latest /home/vagrant/workspace/HannachiNoursine_G1_StationSKI'
+                            sh 'docker build -t arctic-g1-stationski:latest /var/lib/jenkins/workspace/Manai_MARAM_5Arctic4'
                         }
                     }
                 }
