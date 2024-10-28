@@ -49,33 +49,32 @@ pipeline {
             }
         }
 
-        stage('Upload to Nexus') {
-            agent { label 'agent1' }
-            steps {
-                script {
-                    echo "Deploying to Nexus..."
-                    nexusArtifactUploader(
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        nexusUrl: "192.168.33.11:9001",
-                        groupId: 'tn.esprit.spring',
+stage('Upload to Nexus') {
+    agent { label 'agent1' }
+    steps {
+        script {
+            echo "Deploying to Nexus..."
+            nexusArtifactUploader(
+                nexusVersion: 'nexus3',
+                protocol: 'http',
+                nexusUrl: "192.168.33.11:9001",
+                groupId: 'tn.esprit.spring',
+                version: '1.0',
+                repository: "maven-central-repository",
+                credentialsId: "nexus-credentials",
+                files: [
+                    [
                         artifactId: '5Arctic-G1-StationSKI',
-                        version: '1.0',
-                        repository: "maven-central-repository",
-                        credentialsId: "nexus-credentials",
-                        artifacts: [
-                            [
-                                artifactId: '5Arctic-G1-StationSKI',
-                                classifier: '',
-                                file: 'target/5Arctic-G1-StationSKI.jar', 
-                                type: 'jar'
-                            ]
-                        ]
-                    )
-                    echo "Deployment to Nexus completed!"
-                }
-            }
+                        classifier: '',
+                        file: 'target/5Arctic-G1-StationSKI.jar', 
+                        type: 'jar'
+                    ]
+                ]
+            )
+            echo "Deployment to Nexus completed!"
         }
+    }
+}
 
         stage('Build Docker Image') {
             agent { label 'agent1' }
