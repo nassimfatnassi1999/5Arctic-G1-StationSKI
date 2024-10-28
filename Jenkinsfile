@@ -54,7 +54,8 @@ pipeline {
         }
 
         stage('Deploy to Nexus') {
-            agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+        agent any
+          //  agent { label 'agent_1' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Deploying to Nexus'
                 // Using Nexus credentials
@@ -63,7 +64,7 @@ pipeline {
                 }
             }
         }
-         stage('Build Docker Image') {
+ /*        stage('Build Docker Image') {
                     agent { label 'agent_1' }
                     steps {
                         script {
@@ -71,7 +72,7 @@ pipeline {
                         }
                     }
                 }
-/*
+
                 stage('Push Docker Image to Docker Hub') {
                     agent { label 'agent_1' }
                     steps {
