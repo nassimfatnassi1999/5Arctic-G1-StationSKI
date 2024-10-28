@@ -122,6 +122,6 @@
             </plugin>
         </plugins>
 
-        <finalName>55Arctic-G1-StationSKI</finalName>
+        <finalName>5Arctic-G1-StationSKI</finalName>
     </build>
 </project>
