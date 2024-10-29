@@ -130,12 +130,12 @@ pipeline {
                     def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
 
                     if (clusterExists) {
-                        echo "Cluster exists. Deploying the application with Helm."
+                        echo "Cluster exists. Deploying the application."
 
                         // Deploy the application using manifest_files
                         sh '''
-                            kubectl apply -f /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/manifest_files/deploy_backend_mysql.yml 
-                        '''
+                            cd manifest_files
+                            kubectl apply -f deploy_backend_mysql.yml                        '''
                     } else {
                         echo "Cluster does not exist. Creating with Terraform."
                         sh '''
@@ -148,7 +148,8 @@ pipeline {
 
                         // Deploy the application using manifest_files
                         sh ''' 
-                            kubectl apply -f /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/manifest_files/deploy_backend_mysql.yml 
+                            cd manifest_files
+                            kubectl apply -f deploy_backend_mysql.yml
                         '''
                     }
                      sleep 70
