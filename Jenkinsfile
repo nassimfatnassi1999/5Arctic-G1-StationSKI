@@ -120,7 +120,7 @@ pipeline {
             }
         }
          stage('Push Docker Image to Docker Hub') {
-                    agent { label 'agent2' }
+                    agent { label 'agent1' }
                     steps {
                         script {
                             withCredentials([usernamePassword(credentialsId: 'dockerhub_credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
