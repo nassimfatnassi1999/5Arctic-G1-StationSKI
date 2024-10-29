@@ -134,8 +134,7 @@ pipeline {
 
                         // Deploy the application using manifest_files
                         sh '''
-                            /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/manifest_files
-                            kubectl apply -f deploy_backend_mysql.yml 
+                            kubectl apply -f /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/manifest_files/deploy_backend_mysql.yml 
                         '''
                     } else {
                         echo "Cluster does not exist. Creating with Terraform."
@@ -148,9 +147,8 @@ pipeline {
                         sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
 
                         // Deploy the application using manifest_files
-                        sh '''
-                            /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/manifest_files
-                            kubectl apply -f deploy_backend_mysql.yml 
+                        sh ''' 
+                            kubectl apply -f /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/manifest_files/deploy_backend_mysql.yml 
                         '''
                     }
                      sleep 70
