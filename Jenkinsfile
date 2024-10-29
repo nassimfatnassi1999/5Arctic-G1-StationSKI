@@ -110,7 +110,7 @@ pipeline {
                 // Appliquer le déploiement pour l'application Spring Boot
                 sh 'kubectl apply -f deploy_backend.yml'
                 // Appliquer le déploiement pour l'application Angular
-                sh 'kubectl apply -f deploy_frontend.yml'
+               // sh 'kubectl apply -f deploy_frontend.yml'
             }
         }
     }
