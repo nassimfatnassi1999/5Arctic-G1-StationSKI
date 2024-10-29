@@ -120,4 +120,29 @@ pipeline {
         }
     }
 
+    stage('Deploy to Kubernetes') {
+        agent { label 'default' }
+        steps {
+            script {
+                // Appliquer le déploiement pour l'application Spring Boot
+                sh 'kubectl apply -f deploy_backend.yml'
+                // Appliquer le déploiement pour l'application Angular
+                sh 'kubectl apply -f deploy_frontend.yml'
+            }
+        }
+    }
+
+    stage('Expose Services') {
+        agent { label 'default' }
+        steps {
+            script {
+                // Appliquer les services
+                sh 'kubectl apply -f services.yml'
+            }
+        }
+    }
+
+
+
+
 }
