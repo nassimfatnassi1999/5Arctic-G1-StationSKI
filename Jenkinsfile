@@ -1,6 +1,6 @@
 
 pipeline {
-    agent any // Agent par défaut pour le pipeline
+    agent { label 'default' } // Agent par défaut pour le pipeline
     tools {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
