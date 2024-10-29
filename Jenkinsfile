@@ -3,6 +3,8 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'sonarqube'
         SONAR_TOKEN = credentials('sonar-credentials')
+        DOCKER_IMAGE = 'backend-g1-stationski'
+        IMAGE_TAG = 'latest'
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials')
 
 
@@ -106,8 +108,6 @@ pipeline {
             }
             steps {
                 script {
-                    // Vérifiez le contenu du répertoire de travail
-                    sh 'ls -l'
 
                     // Construisez l'image Docker
                     sh """
