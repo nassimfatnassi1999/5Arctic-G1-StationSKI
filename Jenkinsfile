@@ -2,7 +2,10 @@ pipeline {
     agent { label 'agent1' }
     environment {
         SONARQUBE_ENV = 'sonarqube'
-        SONAR_TOKEN = credentials('sonar-credentials')  
+        SONAR_TOKEN = credentials('sonar-credentials')
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials')
+
+
     }
 
     tools {
@@ -117,5 +120,17 @@ pipeline {
                 }
             }
         }
+         stage('Push Docker Image to Docker Hub') {
+                    agent { label 'agent2' }
+                    steps {
+                        script {
+                            withCredentials([usernamePassword(credentialsId: 'dockerhub_credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                                sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                                sh 'docker tag arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                                sh 'docker push $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                            }
+                        }
+                    }
+                }
     }
 }
