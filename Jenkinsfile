@@ -5,8 +5,8 @@ pipeline {
         maven 'M2_HOME'
     }
     environment {
-        DOCKER_IMAGE = 'nassimfatnassi-g1-stationski'  // Dynamic Docker image name
-        IMAGE_TAG = 'latest'  // Image tag (e.g., 'latest' or version)
+        DOCKER_IMAGE = 'nassimfatnassi-g1-stationski'  
+        IMAGE_TAG = 'latest'  
     }
     stages {
         stage('Checkout') {
@@ -123,7 +123,7 @@ pipeline {
             }
         }
 
-        /*stage('Deploy to AKS With Helm') {
+        stage('Deploy to AKS') {
             agent { label 'agent2' }
             steps {
                 script {
@@ -132,10 +132,10 @@ pipeline {
                     if (clusterExists) {
                         echo "Cluster exists. Deploying the application with Helm."
 
-                        // Deploy the application using Helm
+                        // Deploy the application using manifest_files
                         sh '''
-                            cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
-                            helm upgrade --install stationski . 
+                            /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/manifest_files
+                            kubectl apply -f deploy_backend_mysql.yml 
                         '''
                     } else {
                         echo "Cluster does not exist. Creating with Terraform."
@@ -147,10 +147,10 @@ pipeline {
                         sleep 60
                         sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
 
-                        // Deploy the application using Helm
+                        // Deploy the application using manifest_files
                         sh '''
-                            cd /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/helm
-                            helm upgrade --install stationski . 
+                            /home/vagrant/jenkins-agent2/workspace/5Arctic-G1-SKI-Backend/manifest_files
+                            kubectl apply -f deploy_backend_mysql.yml 
                         '''
                     }
                      sleep 70
@@ -163,7 +163,7 @@ pipeline {
 
                 }
             }
-        }*/
+        }
     }
 
   post {
