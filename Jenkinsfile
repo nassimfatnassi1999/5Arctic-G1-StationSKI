@@ -101,24 +101,6 @@ pipeline {
                         }
                     }
                     }
-               
-
-
-    }
-   post {
-        success {
-            script {
-                slackSend(channel: '#jenkins-maram',
-                          message: "Build succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}!")
-            }
-        }
-        failure {
-            script {
-                slackSend(channel: '#jenkins-maram',
-                          message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
-            }
-        }
-    }
 
     stage('Deploy to Kubernetes') {
         agent { label 'default' }
@@ -138,6 +120,25 @@ pipeline {
             script {
                 // Appliquer les services
                 sh 'kubectl apply -f services.yml'
+            }
+        }
+    }
+
+
+
+    }
+
+   post {
+        success {
+            script {
+                slackSend(channel: '#jenkins-maram',
+                          message: "Build succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}!")
+            }
+        }
+        failure {
+            script {
+                slackSend(channel: '#jenkins-maram',
+                          message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
             }
         }
     }
