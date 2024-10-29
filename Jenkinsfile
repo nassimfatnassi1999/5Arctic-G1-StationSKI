@@ -99,8 +99,7 @@ pipeline {
 
         stage('Build Docker Image') {
             environment {
-                DOCKER_IMAGE = 'gestion-station-ski'
-                IMAGE_TAG = '1.0'
+
                 NEXUS_URL = "http://192.168.33.11:9001"
                 GROUP_ID = "tn.esprit.spring"
                 ARTIFACT_ID = "gestion-station-ski"
