@@ -11,6 +11,7 @@ pipeline {
     }
     stages {
         stage('Clone Repository') {
+        agent { label 'default' }
             steps {
                 echo 'Cloning the GitHub repository'
                 // Get code from the GitHub repository
@@ -22,8 +23,8 @@ pipeline {
         }
 
         stage('Clean and Compile') {
-        agent any
-          //  agent { label 'agent_1' } // Utiliser agent1 pour cette étape
+        //agent any
+           agent { label 'default' } // Utiliser agent1 pour cette étape
             steps {
                 echo 'Building the project with Maven'
                 // Exécutez Maven pour nettoyer et compiler
@@ -41,7 +42,8 @@ pipeline {
         }*/
 
         stage('Code Quality with SonarQube') {
-        agent any
+       // agent any
+       agent { label 'default' }
             environment {
                 SONAR_URL = "http://192.168.50.4:9000/"
             }
@@ -55,6 +57,7 @@ pipeline {
         }
 
         stage('Deploy to Nexus') {
+        agent { label 'default' }
             steps {
                 echo 'Deploying to Nexus'
                 // Using Nexus credentials
@@ -64,6 +67,7 @@ pipeline {
             }
         }
         stage('Build Docker Image') {
+        agent { label 'default' }
             steps {
                 script {
                     def nexusUrl = "http://192.168.50.4:8081"
@@ -85,6 +89,7 @@ pipeline {
                   
 
                 stage('Push Docker Image to Docker Hub') {
+                agent { label 'default' }
                
                     steps {
                         script {
