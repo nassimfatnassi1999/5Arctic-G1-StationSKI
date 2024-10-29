@@ -8,6 +8,7 @@ pipeline {
  environment {
         DOCKER_IMAGE = 'manaimaram-g1-stationski'  // Dynamic Docker image name
         IMAGE_TAG = 'latest'  // Image tag (e.g., 'latest' or version)
+        KUBECONFIG = '/home/vagrant/.kube/config'
     }
     stages {
         stage('Clone Repository') {
