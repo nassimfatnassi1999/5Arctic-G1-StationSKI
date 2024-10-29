@@ -55,20 +55,25 @@ pipeline {
             }
         }
 
-       stage('SonarQube Analysis') {
-            agent { label 'agent1' }
-            steps {
-                script {
-                    withSonarQubeEnv("${SONARQUBE_ENV}") {
-                        sh """
-                            mvn sonar:sonar \
-                            -Dsonar.login=${SONAR_TOKEN} \
-                            -Dsonar.coverage.jacoco.xmlReportPaths=/home/vagrant/jenkins-agent1/workspace/5arctic4-G1-StationSki-Backend/target/site/jacoco/jacoco.xml
-                        """
-                    }
-                }
-            }
-        }
+       stage('Static Analysis SonarCloud') {
+                  agent { label 'agent1' }
+                  environment {
+                      SONAR_URL = "https://sonarcloud.io" // URL de SonarCloud
+                  }
+                  steps {
+                      withCredentials([string(credentialsId: 'sonar-cloud-credentials', variable: 'SONAR_TOKEN')]) {
+                          sh '''
+                               mvn sonar:sonar \
+                              -Dsonar.login=${SONAR_TOKEN} \
+                              -Dsonar.host.url=${SONAR_URL} \
+                              -Dsonar.java.binaries=target/classes \
+                              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+                              -Dsonar.projectKey=5Arctic-G1-StationSKI \
+                              -Dsonar.organization=HamdiAlaEddin \
+                          '''
+                      }
+                  }
+              }
 
         stage('Upload to Nexus') {
             steps {
