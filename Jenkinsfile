@@ -2,7 +2,7 @@ pipeline {
     agent { label 'agent1' }
     environment {
         SONARQUBE_ENV = 'sonarqube'
-        SONAR_TOKEN = credentials('sonar-credentials')
+        SONAR_TOKEN = credentials('sonar-cloud-credentials')
         DOCKER_IMAGE = 'backend-g1-stationski'
         IMAGE_TAG = 'latest'
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials')
