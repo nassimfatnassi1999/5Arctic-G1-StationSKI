@@ -69,7 +69,7 @@ pipeline {
                               -Dsonar.java.binaries=target/classes \
                               -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
                               -Dsonar.projectKey=5Arctic-G1-StationSKI \
-                              -Dsonar.organization=hamdialaeddin \
+                              -Dsonar.organization=HamdiAlaEddin \
                           '''
                       }
                   }
