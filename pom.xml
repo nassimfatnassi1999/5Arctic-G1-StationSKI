@@ -94,6 +94,11 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.9.0.2155</version> <!-- Check for the latest version -->
+			</plugin>
 		</plugins>
 		<finalName>5Arctic-G1-StationSKI</finalName>
 	</build>
