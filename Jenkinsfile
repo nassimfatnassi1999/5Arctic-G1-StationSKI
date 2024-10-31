@@ -141,6 +141,6 @@ pipeline {
                 slackSend(channel: '#jenkins-achref',
                           message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
             }
-        }
-    }*/
+        }*/
+    }
 }
