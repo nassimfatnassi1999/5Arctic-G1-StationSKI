@@ -1,11 +1,11 @@
 pipeline {
     agent any
 
- /*    environment {
+     environment {
         SONARQUBE_ENV = 'SonarQube'
         SONAR_TOKEN = credentials('sonarToken')
-        DOCKERHUB_CREDENTIALS = credentials('docker-hub')
-    } */
+       /* DOCKERHUB_CREDENTIALS = credentials('docker-hub')*/
+    }
 
     stages {
         stage('Checkout GIT') {
@@ -24,8 +24,8 @@ pipeline {
             }
         }
 
-       /*  stage('SonarQube Analysis') {
-            agent { label 'master' }
+        stage('SonarQube Analysis') {
+
             steps {
                 script {
                     withSonarQubeEnv("${SONARQUBE_ENV}") {
@@ -38,7 +38,7 @@ pipeline {
                 }
             }
         }
-
+/*
 
          stage('Deploy to Nexus') {
                     agent { label 'agent1' } // Utiliser agent1 pour cette étape
