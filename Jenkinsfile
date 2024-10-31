@@ -6,7 +6,7 @@ pipeline {
     }
     environment {
         DOCKER_IMAGE = 'nassimfatnassi-g1-stationski'  
-        IMAGE_TAG = 'latest'  
+        IMAGE_TAG = '1.1'  
     }
     stages {
         stage('Checkout') {
@@ -62,7 +62,7 @@ pipeline {
                         nexusUrl: "192.168.33.11:9001",
                         groupId: 'tn.esprit.spring',
                         artifactId: '5Arctic-G1-StationSKI',
-                        version: '1.0',
+                        version: '1.1',
                         repository: "maven-central-repository",
                         credentialsId: "nexus-credentials",
                         artifacts: [
@@ -86,7 +86,7 @@ pipeline {
                     def nexusUrl = "http://192.168.33.11:9001"
                     def groupId = "tn.esprit.spring"
                     def artifactId = "5Arctic-G1-StationSKI"
-                    def version = "1.0"
+                    def version = "1.1"
 
                     sh """
                         docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
