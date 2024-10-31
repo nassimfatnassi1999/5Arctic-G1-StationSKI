@@ -27,7 +27,7 @@ spec:
 
       # Backend Container
       - name: backend
-        image: fatnassihnifinassim353/nassimfatnassi-g1-stationski:latest
+        image: fatnassihnifinassim353/nassimfatnassi-g1-stationski:1.1
         env:
         - name: DATABASE_URL
           value: jdbc:mysql://mysql-service:3306/stationSki
