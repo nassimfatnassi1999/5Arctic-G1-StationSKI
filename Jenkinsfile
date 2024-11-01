@@ -107,7 +107,7 @@ pipeline {
                     sh 'trivy image --scanners vuln --timeout 3600s -f json -o trivy_report.json ${DOCKER_IMAGE}:${IMAGE_TAG}'
                     sh 'python3 /home/vagrant/json-to-html.py'
                     sh 'cp /home/vagrant/trivy_report.html ${WORKSPACE}/trivy_report.html'
-                    slackUploadFile channel: '#jenkins-messg', filePath: '/home/vagrant/trivy_report.html', initialComment: 'Rapport Trivy en HTML'
+                    slackUploadFile channel: '#jenkins-messg', filePath: 'trivy_report.html', initialComment: 'Rapport Trivy en HTML'
                 }
             }
         }
