@@ -106,7 +106,7 @@ pipeline {
                     // Lancer le scan Trivy et générer le rapport JSON
                     sh 'trivy image --scanners vuln --timeout 3600s -f json -o trivy_report.json ${DOCKER_IMAGE}:${IMAGE_TAG}'
                     // Convertir le rapport JSON en HTML (utilisez un script Python si Python est installé)
-                    sh 'python3 json-to-html.py'
+                    sh 'python3 /home/vagrant/json-to-html.py'
                     // Envoyer le rapport HTML à Slack en pièce jointe
                     slackUploadFile channel: '#jenkins-messg', filePath: 'trivy_report.html', initialComment: 'Rapport Trivy en HTML'
                 }
