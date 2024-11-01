@@ -108,7 +108,7 @@ pipeline {
                     // Convertir le rapport JSON en HTML (utilisez un script Python si Python est installé)
                     sh 'python3 /home/vagrant/json-to-html.py'
                     // Envoyer le rapport HTML à Slack en pièce jointe
-                    slackUploadFile channel: '#jenkins-messg', filePath: 'trivy_report.html', initialComment: 'Rapport Trivy en HTML'
+                    slackUploadFile channel: '#jenkins-messg', filePath: '/home/vagrant/trivy_report.html', initialComment: 'Rapport Trivy en HTML'
                 }
             }
 }
