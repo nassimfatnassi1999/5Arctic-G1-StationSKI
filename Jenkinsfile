@@ -68,7 +68,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                        sh 'docker tag samaalimedachref-arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                        sh 'docker tag samaalimedachref-arctic-g1-stationski:latest $DOCKER_USERNAME/samaalimedachref-arctic-g1-stationski:latest'
                         sh 'docker push $DOCKER_USERNAME/samaalimedachref-arctic-g1-stationski:latest'
                     }
                 }
