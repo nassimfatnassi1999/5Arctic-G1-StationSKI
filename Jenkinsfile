@@ -34,6 +34,8 @@ pipeline {
                         sh """
                             mvn sonar:sonar \
                             -Dsonar.login=${SONAR_TOKEN} \
+                            -Dsonar.inclusions=src/main/java/tn/esprit/spring/services/**\
+                            -Dsonar.test.inclusions=src/test/java/tn/esprit/spring/services/**
                             -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
                         """
                     }
