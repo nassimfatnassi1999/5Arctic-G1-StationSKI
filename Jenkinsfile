@@ -26,22 +26,23 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            agent { label 'master' }
-            steps {
-                script {
-                    withSonarQubeEnv("${SONARQUBE_ENV}") {
-                        sh """
-                            mvn sonar:sonar \
-                            -Dsonar.login=${SONAR_TOKEN} \
-                            -Dsonar.inclusions=src/main/java/tn/esprit/spring/services/**\
-                            -Dsonar.test.inclusions=src/test/java/tn/esprit/spring/services/**\
-                            -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
-                        """
-                    }
-                }
-            }
-        }
+       stage('SonarQube Analysis') {
+           agent { label 'master' }
+           steps {
+               script {
+                   withSonarQubeEnv("${SONARQUBE_ENV}") {
+                       sh """
+                           mvn sonar:sonar \
+                           -Dsonar.login=${SONAR_TOKEN} \
+                           -Dsonar.inclusions=src/main/java/tn/esprit/spring/services/** \
+                           -Dsonar.test.inclusions=src/test/java/tn/esprit/spring/services/** \
+                           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                       """
+                   }
+               }
+           }
+       }
+
 
 
          stage('Deploy to Nexus') {
