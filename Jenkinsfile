@@ -102,28 +102,31 @@ pipeline {
                         }
                     }
                     }
+             stage('Deploy to AKS') {
+                      agent { label 'vm2' }
+                      steps {
+                          script {
+                              def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
 
-    stage('Deploy to Kubernetes') {
-        agent { label 'default' }
-        steps {
-            script {
-                // Appliquer le déploiement pour l'application Spring Boot
-                sh 'kubectl apply -f deploy_backend.yml'
-                // Appliquer le déploiement pour l'application Angular
-               // sh 'kubectl apply -f deploy_frontend.yml'
-            }
-        }
-    }
+                              if (clusterExists) {
+                                  echo "The AKS cluster exists and is accessible."
+                                  sh 'kubectl apply -f deploy.yml'
+                              } else {
+                                  echo "The AKS cluster does not exist. Creating the cluster with Terraform."
+                                  sh '''
+                                      cd /home/vagrant/mycluster
+                                       terraform init
+                                       terraform apply -auto-approve
+                                  '''
+                                  //sleep 60
+                                  sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
+                                  sh 'kubectl apply -f deploy.yml'
+                              }
+                          }
+                      }
+                  }
 
-    stage('Expose Services') {
-        agent { label 'default' }
-        steps {
-            script {
-                // Appliquer les services
-                sh 'kubectl apply -f services.yml'
-            }
-        }
-    }
+
 
 
 
