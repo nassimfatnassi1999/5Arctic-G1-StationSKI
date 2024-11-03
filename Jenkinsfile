@@ -111,7 +111,7 @@ pipeline {
                 }
             }
         }
-        stage('Monitor with Prometheus') {
+    /*    stage('Monitor with Prometheus') {
             agent { label 'agent1' }
             steps {
                 script {
@@ -130,7 +130,7 @@ pipeline {
                     echo "Prometheus monitoring deployed successfully."
                 }
             }
-        }
+        }*/
 
     }
 
