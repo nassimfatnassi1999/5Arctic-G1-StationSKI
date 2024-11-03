@@ -1,11 +1,10 @@
 package tn.esprit.spring.services;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tn.esprit.spring.entities.Course;
 import tn.esprit.spring.repositories.ICourseRepository;
@@ -23,7 +22,7 @@ class CourseServicesImplTest {
     @InjectMocks
     private CourseServicesImpl courseServices;
 
-    @MockBean
+    @Mock
     private ICourseRepository courseRepository;
 
     @BeforeEach
