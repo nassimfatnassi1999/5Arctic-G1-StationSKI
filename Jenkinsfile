@@ -82,7 +82,7 @@ pipeline {
            steps {
                script {
                    // Run Trivy scan using offline mode
-                   sh "trivy image --skip-update  mohammedachref/samaalimedachref-arctic-g1-stationski:latest >scanImage.txt"
+                   sh "trivy image  mohammedachref/samaalimedachref-arctic-g1-stationski:latest >scanImage.txt"
                }
            }
        }
