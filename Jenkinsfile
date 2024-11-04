@@ -1,5 +1,5 @@
 pipeline {
-    agent any // Agent par défaut pour le pipeline
+    agent any
 
     tools {
         jdk 'JAVA_HOME'
@@ -10,7 +10,6 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the GitHub repository'
-                // Récupérer le code depuis le dépôt GitHub
                 git(
                     url: 'https://github.com/nassimfatnassi1999/5Arctic-G1-StationSKI.git',
                     branch: 'HannachiNoursine_G1_StationSKI'
@@ -19,10 +18,9 @@ pipeline {
         }
 
         stage('Clean and Compile') {
-            agent { label 'agent_1' } // Utiliser agent_1 pour cette étape
+            agent { label 'agent_1' }
             steps {
                 echo 'Building the project with Maven'
-                // Exécuter Maven pour nettoyer et compiler
                 sh 'mvn clean install'
             }
         }
@@ -31,7 +29,6 @@ pipeline {
             agent { label 'agent_1' }
             steps {
                 echo 'Generating JaCoCo report'
-                // Exécuter Maven pour générer le rapport JaCoCo
                 sh 'mvn jacoco:report'
             }
         }
@@ -70,6 +67,16 @@ pipeline {
                 echo 'Building Docker Image'
                 script {
                     sh 'docker build -t arctic-g1-stationski:latest .'
+                }
+            }
+        }
+
+        stage('Trivy Scan') {
+            agent { label 'agent_1' }
+            steps {
+                echo 'Scanning Docker image with Trivy for vulnerabilities'
+                script {
+                    sh 'trivy image --severity HIGH,CRITICAL --format json -o trivy_report.json arctic-g1-stationski:latest'
                 }
             }
         }
@@ -115,21 +122,34 @@ pipeline {
     }
 
     post {
-        success {
+        always {
+            archiveArtifacts artifacts: 'trivy_report.json', allowEmptyArchive: true
+            echo "Trivy scan report archived."
+
             script {
-                slackSend(
-                    channel: '#jenkins_noursine',
-                    message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: arctic-g1-stationski:latest successfully."
-                )
+                def trivyReport = readFile 'trivy_report.json'
+                def vulnerabilities = new groovy.json.JsonSlurper().parseText(trivyReport)
+
+                // Formater les messages pour les vulnérabilités critiques et élevées
+                def highAndCriticalVulns = vulnerabilities.findAll {
+                    it.Vulnerabilities.any { v -> v.Severity in ['HIGH', 'CRITICAL'] }
+                }.collect { v ->
+                    "- ${v.Target} (${v.Type}): ${v.Vulnerabilities.collect { vuln -> "${vuln.Title} (${vuln.Severity})" }.join(', ')}"
+                }
+
+                if (highAndCriticalVulns) {
+                    def message = "Rapport Trivy : Vulnérabilités trouvées dans l'image Docker:\n" + highAndCriticalVulns.join("\n")
+                    slackSend(channel: '#jenkins_noursine', message: message)
+                } else {
+                    slackSend(channel: '#jenkins_noursine', message: "Rapport Trivy : Aucune vulnérabilité critique ou élevée trouvée dans l'image Docker.")
+                }
             }
         }
+        success {
+            slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: arctic-g1-stationski:latest successfully.")
+        }
         failure {
-            script {
-                slackSend(
-                    channel: '#jenkins_noursine',
-                    message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
-                )
-            }
+            slackSend(channel: '#jenkins_noursine', message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
         }
     }
 }
