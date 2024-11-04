@@ -1,26 +1,23 @@
-# Utilise une image officielle Java Runtime comme image de base
-FROM eclipse-temurin:17-jre-jammy
+# Use an OpenJDK image as the base
+FROM openjdk:17-jdk-alpine
 
-# Fixe le répertoire de travail
-WORKDIR /app
+# Define build arguments for Nexus configuration
+ARG NEXUS_URL
+ARG GROUP_ID
+ARG ARTIFACT_ID
+ARG VERSION
 
-# Installe curl pour télécharger le fichier JAR
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+ Construct the Nexus download URL based on these arguments
+RUN apk add --no-cache curl && \
+    curl -o app.jar "$NEXUS_URL/repository/maven-releases/$(echo $GROUP_ID | tr . /)/$ARTIFACT_ID/$VERSION/$ARTIFACT_ID-$VERSION.jar"
 
-# Télécharge le .jar depuis Nexus
-RUN curl -f -o app.jar "http://192.168.33.11:8081/repository/maven-releases/tn/esprit/spring/gestion-station-ski/1.1/gestion-station-ski-1.0.jar"
-
-# Vérifie que le fichier JAR est bien téléchargé
-RUN test -f app.jar || (echo "Le fichier app.jar n'a pas pu être téléchargé" && exit 1)
-
-# Expose le port sur lequel l'application écoute
+# Expose the application port
 EXPOSE 9001
 
-# Commande pour lancer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
-####################
-###FROM openjdk:17-jdk-alpine
-###WORKDIR /app
-###COPY target/*.jar app.jar
-###EXPOSE 9001
-###ENTRYPOINT ["java", "-jar", "app.jar"]
+
+#FROM openjdk:17-jdk-alpine
+#WORKDIR /app
+#COPY target/*.jar app.jar
+#EXPOSE 9000
+#ENTRYPOINT ["java", "-jar", "app.jar"]
