@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 
-@CrossOrigin(origins = "4.156.150.138")
+@CrossOrigin(origins = "*")
 @Tag(name = "\uD83D\uDC65 Subscription Management")
 @RestController
 @RequestMapping("/subscription")
