@@ -71,25 +71,18 @@ pipeline {
             }
         }
 
-        stage('Trivy Scan') {
-            agent { label 'agent_1' }
-            steps {
-                echo 'Scanning Docker image with Trivy for vulnerabilities'
-                script {
-                    // Set Trivy cache directory to a writable location in the Jenkins workspace
-                    def trivyCacheDir = "${env.WORKSPACE}/trivy-cache"
-                    sh "mkdir -p ${trivyCacheDir}"
-                    sh """
-                        trivy image --scanners vuln --cache-dir ${trivyCacheDir} \
-                        --severity HIGH,CRITICAL --format json -o trivy_report.json \
-                        --timeout 10m arctic-g1-stationski:latest || \
-                        (sleep 30 && trivy image --scanners vuln --cache-dir ${trivyCacheDir} \
-                        --severity HIGH,CRITICAL --format json -o trivy_report.json \
-                        --timeout 10m arctic-g1-stationski:latest)
-                    """
+           stage('Scan with Trivy') {
+                     agent { label 'agent_1' }
+                    steps {
+                        script {
+                            // Lancer le scan Trivy et générer le rapport JSON
+                            sh 'trivy image --scanners vuln --timeout 3600s -f json -o trivy_report.json ${DOCKER_IMAGE}:${IMAGE_TAG}'
+                            sh 'python3 /home/vagrant/json-to-html.py'
+                            sh 'cp /home/vagrant/trivy_report.html ${WORKSPACE}/trivy_report.html'
+                            slackUploadFile channel: '#jenkins-messg', filePath: 'trivy_report.html', initialComment: 'Rapport Trivy en HTML'
+                        }
+                    }
                 }
-            }
-        }
 
         stage('Push Docker Image to Docker Hub') {
             agent { label 'agent_1' }
