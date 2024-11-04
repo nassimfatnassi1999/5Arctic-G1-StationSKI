@@ -118,7 +118,7 @@ pipeline {
                                                    } else {
                                                        echo "The AKS cluster does not exist. Creating the cluster with Terraform."
                                                        sh '''
-                                                            cp /var/lib/jenkins/workspace/AlaaEddinHamdi-5ARCTIC-G1/main.tf /var/lib/jenkins/workspace/AKS/main.tf
+                                                            cp main.tf /var/lib/jenkins/workspace/AKS/main.tf
                                                             cd AKS
                                                             terraform init
                                                             terraform apply -auto-approve
