@@ -25,11 +25,11 @@ spec:
               name: mysql-port
         - name: backend
 
-          image: alaeddin1312/hamdialaaeddin-5arctic4-g1-stationski:0.0.2
+          image: alaeddin1312/hamdialaaeddin-5arctic4-g1-stationski:0.0.3
 
           env:
             - name: DATABASE_URL
-              value: jdbc:mysql://localhost:3306/stationSki
+              value: jdbc:mysql://mysql-service:3306/stationSki
           ports:
             - containerPort: 9001
               name: backend-port
