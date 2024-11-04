@@ -68,7 +68,7 @@ pipeline {
                 script {
                     // Naming convention for Docker image (changed to lowercase)
                     def dockerImageName = 'hannachinoursine-5arctic4-g1-stationski'
-                    sh "docker build -t ${dockerImageName}:0.0.1 ."
+                    sh "docker build -t ${dockerImageName}:0.0.2 ."
                 }
             }
         }
@@ -81,8 +81,8 @@ pipeline {
                     def dockerImageName = 'hannachinoursine-5arctic4-g1-stationski' // Ensure lowercase here as well
                     withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                        sh "docker tag ${dockerImageName}:0.0.1 $DOCKER_USERNAME/${dockerImageName}:0.0.1"
-                        sh "docker push $DOCKER_USERNAME/${dockerImageName}:0.0.1"
+                        sh "docker tag ${dockerImageName}:0.0.1 $DOCKER_USERNAME/${dockerImageName}:0.0.2"
+                        sh "docker push $DOCKER_USERNAME/${dockerImageName}:0.0.2"
                     }
                 }
             }
