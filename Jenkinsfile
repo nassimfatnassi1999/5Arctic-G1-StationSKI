@@ -86,17 +86,13 @@ stage('Build Docker Image') {
             agent { label 'master' }
             steps {
                 script {
-                    def nexusUrl = "http://192.168.33.11:9001"
-                    def groupId = "tn.esprit.spring"
-                    def artifactId = "5Arctic-G1-StationSKI"
-                    def version = "1.1"
-
                     sh """
-                        docker build -t hamdialaaeddin-5arctic4-g1-stationski:3.2 } \
-                        --build-arg NEXUS_URL=${nexusUrl} \
-                        --build-arg GROUP_ID=${groupId} \
-                        --build-arg ARTIFACT_ID=${artifactId} \
-                        --build-arg VERSION=${version} .
+                       docker build -t hamdialaaeddin-5arctic4-g1-stationski:3.2 \
+                      --build-arg NEXUS_URL=http://192.168.33.11:9001 \
+                      --build-arg GROUP_ID=tn.esprit.spring \
+                      --build-arg ARTIFACT_ID=5Arctic-G1-StationSKI \
+                      --build-arg VERSION=1.1 .
+
                     """
                 }
             }
