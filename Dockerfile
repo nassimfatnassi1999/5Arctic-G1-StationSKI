@@ -1,5 +1,5 @@
 # Utilise une image officielle Java Runtime comme image de base
-FROM openjdk:17-jdk-alpine
+FROM openjdk:17-jdk
 
 # Fixe le répertoire de travail
 WORKDIR /app
