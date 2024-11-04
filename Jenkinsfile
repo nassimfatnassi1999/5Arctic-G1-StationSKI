@@ -71,20 +71,25 @@ pipeline {
             }
         }
 
-     stage('Trivy Scan') {
-         agent { label 'agent_1' }
-         steps {
-             echo 'Scanning Docker image with Trivy for vulnerabilities'
-             script {
-                 // Set Trivy cache directory to a writable location in the Jenkins workspace
-                 def trivyCacheDir = "${env.WORKSPACE}/trivy-cache"
-                 sh "mkdir -p ${trivyCacheDir}"
-                 sh "trivy image --scanners vuln --cache-dir ${trivyCacheDir} --severity HIGH,CRITICAL --format json -o trivy_report.json --timeout 10m arctic-g1-stationski:latest || (sleep 30 && trivy image --scanners vuln --cache-dir ${trivyCacheDir} --severity HIGH,CRITICAL --format json -o trivy_report.json --timeout 10m arctic-g1-stationski:latest)"
-             }
-         }
-     }
-
-
+        stage('Trivy Scan') {
+            agent { label 'agent_1' }
+            steps {
+                echo 'Scanning Docker image with Trivy for vulnerabilities'
+                script {
+                    // Set Trivy cache directory to a writable location in the Jenkins workspace
+                    def trivyCacheDir = "${env.WORKSPACE}/trivy-cache"
+                    sh "mkdir -p ${trivyCacheDir}"
+                    sh """
+                        trivy image --scanners vuln --cache-dir ${trivyCacheDir} \
+                        --severity HIGH,CRITICAL --format json -o trivy_report.json \
+                        --timeout 10m arctic-g1-stationski:latest || \
+                        (sleep 30 && trivy image --scanners vuln --cache-dir ${trivyCacheDir} \
+                        --severity HIGH,CRITICAL --format json -o trivy_report.json \
+                        --timeout 10m arctic-g1-stationski:latest)
+                    """
+                }
+            }
+        }
 
         stage('Push Docker Image to Docker Hub') {
             agent { label 'agent_1' }
@@ -135,7 +140,7 @@ pipeline {
                 def trivyReport = readFile 'trivy_report.json'
                 def vulnerabilities = new groovy.json.JsonSlurper().parseText(trivyReport)
 
-                // Formater les messages pour les vulnérabilités critiques et élevées
+                // Format messages for critical and high vulnerabilities
                 def highAndCriticalVulns = vulnerabilities.findAll {
                     it.Vulnerabilities.any { v -> v.Severity in ['HIGH', 'CRITICAL'] }
                 }.collect { v ->
@@ -151,7 +156,7 @@ pipeline {
             }
         }
         success {
-            slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: arctic-g1-stationski:latest successfully.Backend IP: ${env.BACKEND_IP}")
+            slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: arctic-g1-stationski:latest successfully. Backend IP: ${env.BACKEND_IP}")
         }
         failure {
             slackSend(channel: '#jenkins_noursine', message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
