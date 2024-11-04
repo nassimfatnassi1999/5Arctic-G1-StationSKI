@@ -119,7 +119,7 @@ pipeline {
                                                        echo "The AKS cluster does not exist. Creating the cluster with Terraform."
                                                        sh '''
 
-                                                            cd AKS
+                                                            cd /var/lib/jenkins/workspace
                                                             terraform init
                                                             terraform apply -auto-approve
                                                        '''
