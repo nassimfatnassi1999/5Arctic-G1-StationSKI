@@ -25,7 +25,7 @@ pipeline {
 
         stage('Clean and Install') {
             steps {
-                sh 'mvn clean package | tee build.log'
+                sh 'mvn clean install '
             }
         }
 
