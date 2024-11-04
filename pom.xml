@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>tn.esprit.spring</groupId>
 	<artifactId>gestion-station-ski</artifactId>
-	<version>1.1</version>
+	<version>1.0</version>
 	<name>5Arctic-G1-StationSKI</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
