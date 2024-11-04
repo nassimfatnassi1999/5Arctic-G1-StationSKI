@@ -146,7 +146,7 @@ pipeline {
             }
         }
         success {
-            slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: arctic-g1-stationski:latest successfully.")
+            slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: arctic-g1-stationski:latest successfully.Backend IP: ${env.BACKEND_IP}")
         }
         failure {
             slackSend(channel: '#jenkins_noursine', message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
