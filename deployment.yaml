@@ -25,7 +25,7 @@ spec:
               name: mysql-port
         - name: backend
 
-          image: alaeddin1312/hamdialaaeddin-5arctic4-g1-stationski:0.0.3
+          image: alaeddin1312/hamdialaaeddin-5arctic4-g1-stationski:0.0.2
 
           env:
             - name: DATABASE_URL
