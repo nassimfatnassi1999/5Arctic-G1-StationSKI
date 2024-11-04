@@ -60,7 +60,7 @@ pipeline {
             agent { label 'agent1' }
             steps {
                 script {
-                    sh 'docker build -t samaalimedachref-arctic-g1-stationski:latest /home/vagrant/workspace/5Arctic-G1-bakend/'
+                    sh 'docker build -t samaalimedachref-arctic-g1-stationski:0.0.1 /home/vagrant/workspace/5Arctic-G1-bakend/'
                 }
             }
         }
@@ -71,8 +71,8 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                        sh 'docker tag samaalimedachref-arctic-g1-stationski:latest $DOCKER_USERNAME/samaalimedachref-arctic-g1-stationski:latest'
-                        sh 'docker push $DOCKER_USERNAME/samaalimedachref-arctic-g1-stationski:latest'
+                        sh 'docker tag samaalimedachref-arctic-g1-stationski:0.0.1 $DOCKER_USERNAME/samaalimedachref-arctic-g1-stationski:0.0.1'
+                        sh 'docker push $DOCKER_USERNAME/samaalimedachref-arctic-g1-stationski:0.0.1'
                     }
                 }
             }
@@ -82,7 +82,7 @@ pipeline {
            steps {
                script {
                    // Run Trivy scan using offline mode
-                   sh "trivy image  mohammedachref/samaalimedachref-arctic-g1-stationski:latest >scanImage.txt"
+                   sh "trivy image  mohammedachref/samaalimedachref-arctic-g1-stationski:0.0.1 >scanImage.txt"
                }
            }
        }
