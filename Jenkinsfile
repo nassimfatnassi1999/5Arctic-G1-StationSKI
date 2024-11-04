@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'hamdialaaeddin-g1-stationski'
         SONAR_TOKEN = credentials('sonar_token')
         IMAGE_TAG = 'latest'
-        DOCKERHUB_CREDENTIALS = credentials('docker-token')
+        DOCKERHUB_CREDENTIALS = credentials('docker_token')
     }
 
     tools {
