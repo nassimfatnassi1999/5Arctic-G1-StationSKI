@@ -66,8 +66,8 @@ pipeline {
             steps {
                 echo 'Building Docker Image'
                 script {
-                    // Naming convention for Docker image
-                    def dockerImageName = 'HannachiNoursine-5ARCTIC4-G1-StationSKI'
+                    // Naming convention for Docker image (changed to lowercase)
+                    def dockerImageName = 'hannachinoursine-5arctic4-g1-stationski'
                     sh "docker build -t ${dockerImageName}:latest ."
                 }
             }
@@ -78,7 +78,7 @@ pipeline {
             steps {
                 echo 'Pushing Docker Image to Docker Hub'
                 script {
-                    def dockerImageName = 'HannachiNoursine-5ARCTIC4-G1-StationSKI'
+                    def dockerImageName = 'hannachinoursine-5arctic4-g1-stationski' // Ensure lowercase here as well
                     withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                         sh "docker tag ${dockerImageName}:latest $DOCKER_USERNAME/${dockerImageName}:latest"
@@ -139,7 +139,7 @@ pipeline {
             }
         }
         success {
-            slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: HannachiNoursine-5ARCTIC4-G1-StationSKI:latest successfully. Backend IP: ${env.BACKEND_IP}")
+            slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: hannachinoursine-5arctic4-g1-stationski:latest successfully. Backend IP: ${env.BACKEND_IP}")
         }
         failure {
             slackSend(channel: '#jenkins_noursine', message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
