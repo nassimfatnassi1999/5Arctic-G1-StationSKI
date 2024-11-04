@@ -12,12 +12,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-
-@CrossOrigin(origins = "*")
 @Tag(name = "\uD83D\uDC65 Subscription Management")
 @RestController
 @RequestMapping("/subscription")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class SubscriptionRestController {
 
     private final ISubscriptionServices subscriptionServices;
