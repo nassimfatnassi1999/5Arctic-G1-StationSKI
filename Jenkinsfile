@@ -107,6 +107,7 @@ pipeline {
                    }
                }
                     stage('Deploy to AKS') {
+                     agent { label 'agent1' }
                          steps {
                              script {
                                  echo "Deploying frontend application using deploy.yml."
