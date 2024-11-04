@@ -8,7 +8,11 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Getter
@@ -17,7 +21,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level=AccessLevel.PRIVATE)
 @Entity
-@Builder(access = lombok.AccessLevel.PUBLIC)
 public class Skier implements Serializable {
 
 	@Id
@@ -42,6 +45,10 @@ public class Skier implements Serializable {
 
 	@OneToMany(mappedBy = "skier")
 	Set<Registration> registrations;
+
+
+
+
 
 
 }

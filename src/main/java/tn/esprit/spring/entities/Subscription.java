@@ -5,7 +5,12 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
@@ -14,7 +19,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level=AccessLevel.PRIVATE)
 @Entity
-@Builder(access = lombok.AccessLevel.PUBLIC)
 public class Subscription implements Serializable {
 
 	@Id
