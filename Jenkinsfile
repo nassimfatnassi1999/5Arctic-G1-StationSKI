@@ -114,14 +114,14 @@ pipeline {
                         }
                     }
                     }
-                    /*
+
              stage('Deploy to AKS') {
                       agent { label 'agent1' }
                       steps {
                           script {
                               def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
 
-                              if (clusterExists) {
+                            if (clusterExists) {
                                   echo "The AKS cluster exists and is accessible."
                                   sh 'kubectl apply -f deploy.yml'
                               } else {
@@ -138,10 +138,10 @@ pipeline {
                           }
                       }
                   }
-*/
 
 
 
+/*
  stage('Check VM Status') {
             steps {
                 script {
@@ -160,7 +160,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
 
 
 
