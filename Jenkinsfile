@@ -71,15 +71,17 @@ pipeline {
             }
         }
 
-        stage('Trivy Scan') {
-            agent { label 'agent_1' }
-            steps {
-                echo 'Scanning Docker image with Trivy for vulnerabilities'
-                script {
-                    sh 'trivy image --severity HIGH,CRITICAL --format json -o trivy_report.json  --timeout 10m arctic-g1-stationski:latest'
-                }
-            }
-        }
+       stage('Trivy Scan') {
+           agent { label 'agent_1' }
+           steps {
+               echo 'Scanning Docker image with Trivy for vulnerabilities'
+               script {
+                   // Set Trivy cache directory to avoid redundant downloads
+                   sh 'trivy image --scanners vuln --cache-dir /var/trivy-cache --severity HIGH,CRITICAL --format json -o trivy_report.json --timeout 10m arctic-g1-stationski:latest || (sleep 30 && trivy image --scanners vuln --cache-dir /var/trivy-cache --severity HIGH,CRITICAL --format json -o trivy_report.json --timeout 10m arctic-g1-stationski:latest)'
+               }
+           }
+       }
+
 
         stage('Push Docker Image to Docker Hub') {
             agent { label 'agent_1' }
