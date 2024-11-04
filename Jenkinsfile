@@ -9,8 +9,20 @@ pipeline {
         DOCKER_IMAGE = 'manaimaram-g1-stationski'  // Dynamic Docker image name
         IMAGE_TAG = 'latest'  // Image tag (e.g., 'latest' or version)
         KUBECONFIG = '/home/vagrant/.kube/config'
+        PROMETHEUS_URL = 'http://192.168.50.4:9090'
+        GRAFANA_URL = 'http://192.168.50.4:3000'
+
     }
     stages {
+
+
+   /*  stage('webhook done') {
+                steps {
+                    echo "Pipeline triggered by push event"
+                }
+            }*/
+
+
         stage('Clone Repository') {
         agent { label 'default' }
             steps {
@@ -102,6 +114,7 @@ pipeline {
                         }
                     }
                     }
+                    /*
              stage('Deploy to AKS') {
                       agent { label 'agent1' }
                       steps {
@@ -125,7 +138,29 @@ pipeline {
                           }
                       }
                   }
+*/
 
+
+
+ stage('Check VM Status') {
+            steps {
+                script {
+                    def vmStatus = sh(script: "curl -s '${PROMETHEUS_URL}/api/v1/query?query=up{instance=\"192.168.50.4:9100\"}'", returnStdout: true).trim()
+
+                    if (!vmStatus.contains('"value":[[1,"1"]]')) {
+                        mail to: 'maram.manai@esprit.tn',
+                             subject: "Alert: VM Down!",
+                             body: """
+                             The VM is down. Please check the status at the Grafana dashboard:
+                             ${GRAFANA_URL}
+                             """
+                        error("VM is down")
+                    } else {
+                        echo "VM is up and healthy."
+                    }
+                }
+            }
+        }
 
 
 
