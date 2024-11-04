@@ -115,29 +115,6 @@ pipeline {
     }
 
     post {
-        always {
-            archiveArtifacts artifacts: 'trivy_report.json', allowEmptyArchive: true
-            echo "Trivy scan report archived."
-
-            script {
-                def trivyReport = readFile 'trivy_report.json'
-                def vulnerabilities = new groovy.json.JsonSlurper().parseText(trivyReport)
-
-                // Format messages for critical and high vulnerabilities
-                def highAndCriticalVulns = vulnerabilities.findAll {
-                    it.Vulnerabilities.any { v -> v.Severity in ['HIGH', 'CRITICAL'] }
-                }.collect { v ->
-                    "- ${v.Target} (${v.Type}): ${v.Vulnerabilities.collect { vuln -> "${vuln.Title} (${vuln.Severity})" }.join(', ')}"
-                }
-
-                if (highAndCriticalVulns) {
-                    def message = "Rapport Trivy : Vulnérabilités trouvées dans l'image Docker:\n" + highAndCriticalVulns.join("\n")
-                    slackSend(channel: '#jenkins_noursine', message: message)
-                } else {
-                    slackSend(channel: '#jenkins_noursine', message: "Rapport Trivy : Aucune vulnérabilité critique ou élevée trouvée dans l'image Docker.")
-                }
-            }
-        }
         success {
             slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: hannachinoursine-5arctic4-g1-stationski:latest successfully. Backend IP: ${env.BACKEND_IP}")
         }
