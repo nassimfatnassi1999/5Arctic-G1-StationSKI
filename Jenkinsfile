@@ -86,7 +86,7 @@ pipeline {
             }
         }
   stage('Build Docker Image') {
-            agent { label 'agent1' }
+            agent { label 'master' }
             steps {
                 script {
                     def nexusUrl = "http://192.168.33.11:8081"
