@@ -1,5 +1,5 @@
 # Utilise une image officielle Java Runtime comme image de base
-FROM eclipse-temurin:17-jre-jammy
+FROM openjdk:17-jdk-alpine
 
 # Fixe le répertoire de travail
 WORKDIR /app

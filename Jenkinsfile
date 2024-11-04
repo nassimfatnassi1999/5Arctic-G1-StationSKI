@@ -2,7 +2,6 @@ pipeline {
     agent { label 'agent1' }
     environment {
         SONARQUBE_ENV = 'sonarqube'
-        DOCKER_IMAGE = 'hamdialaaeddin-g1-stationski'
         SONAR_TOKEN = credentials('sonar_token')
         IMAGE_TAG = 'latest'
         DOCKERHUB_CREDENTIALS = credentials('docker_token')
@@ -100,8 +99,8 @@ pipeline {
                        script {
                            withCredentials([usernamePassword(credentialsId: 'docker_token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                                sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                               sh 'docker tag hamdialaaeddin-5arctic4-g1-stationski:latest $DOCKER_USERNAME/hamdialaaeddin-5arctic4-g1-stationski:latest'
-                               sh 'docker push $DOCKER_USERNAME/hamdialaaeddin-5arctic4-g1-stationski:latest'
+                               sh 'docker tag hamdialaaeddin-5arctic4-g1-stationski:3.1 $DOCKER_USERNAME/hamdialaaeddin-5arctic4-g1-stationski:3.1'
+                               sh 'docker push $DOCKER_USERNAME/hamdialaaeddin-5arctic4-g1-stationski:3.1'
                            }
                        }
                    }
