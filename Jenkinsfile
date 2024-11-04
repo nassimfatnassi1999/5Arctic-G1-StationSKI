@@ -89,7 +89,7 @@ pipeline {
             agent { label 'agent1' }
             steps {
                 script {
-                    def nexusUrl = "http://192.168.33.11:9001"
+                    def nexusUrl = "http://192.168.33.11:8081"
                     def groupId = "tn.esprit.spring"
                     def artifactId = "5Arctic-G1-StationSKI"
                     def version = "1.1"
