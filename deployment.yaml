@@ -27,7 +27,7 @@ spec:
 
         # Backend Container
         - name: backend
-          image: alaeddin1312/hamdialaaeddin-5arctic4-g1-stationski:0.0.5
+          image: alaeddin1312/hamdialaaeddin-5arctic4-g1-stationski:0.0.6
           env:
             - name: DATABASE_URL
               value: jdbc:mysql://mysql-service:3306/stationSki
