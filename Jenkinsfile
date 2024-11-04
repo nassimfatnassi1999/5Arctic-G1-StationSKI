@@ -3,6 +3,7 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'sonarqube'
         DOCKER_IMAGE = 'backend-g1-stationski'
+        SONAR_TOKEN = credentials('sonar_token')
         IMAGE_TAG = 'latest'
     }
 
