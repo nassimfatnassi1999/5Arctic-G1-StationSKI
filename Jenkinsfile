@@ -68,7 +68,7 @@ pipeline {
                         protocol: 'http',
                         nexusUrl: "192.168.33.11:8081",
                         groupId: 'tn.esprit.spring',
-                        version: '1.0',
+                        version: '1.1',
                         repository: "maven-releases",
                         credentialsId: "nexus_token",
                         artifacts: [
