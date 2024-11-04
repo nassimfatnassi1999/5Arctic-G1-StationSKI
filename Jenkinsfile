@@ -82,16 +82,26 @@ pipeline {
                 }
             }
         }
+stage('Build Docker Image') {
+            agent { label 'master' }
+            steps {
+                script {
+                    def nexusUrl = "http://192.168.33.11:9001"
+                    def groupId = "tn.esprit.spring"
+                    def artifactId = "5Arctic-G1-StationSKI"
+                    def version = "1.1"
 
-        stage('Build Docker Image') {
-                   agent { label 'master' }
-                   steps {
-                       script {
-                           sh 'docker build -t hamdialaaeddin-5arctic4-g1-stationski:3.2 .'
-                       }
-                   }
-               }
-
+                    sh """
+                        docker build -t hamdialaaeddin-5arctic4-g1-stationski:3.2 } \
+                        --build-arg NEXUS_URL=${nexusUrl} \
+                        --build-arg GROUP_ID=${groupId} \
+                        --build-arg ARTIFACT_ID=${artifactId} \
+                        --build-arg VERSION=${version} .
+                    """
+                }
+            }
+        }
+        
                stage('Push Docker Image to Docker Hub') {
                    agent { label 'master' }
                    steps {
