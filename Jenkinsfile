@@ -106,15 +106,29 @@ pipeline {
                        }
                    }
                }
-                    stage('Deploy to AKS') {
-                     agent { label 'agent1' }
-                         steps {
-                             script {
-                                 echo "Deploying frontend application using deploy.yml."
-                                 sh 'kubectl apply -f deploy.yml'
-                             }
-                         }
-                     }
-                 }
+               stage('Deploy to AKS') {
+                                           agent { label 'agent1' }
+                                           steps {
+                                               script {
+                                                   def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
+
+                                                   if (clusterExists) {
+                                                       echo "The AKS cluster exists and is accessible."
+                                                       sh 'kubectl apply -f deployment.yaml'
+                                                   } else {
+                                                       echo "The AKS cluster does not exist. Creating the cluster with Terraform."
+                                                       sh '''
+
+                                                            cd /home/vagrant/mycluster
+                                                            terraform init
+                                                            terraform apply -auto-approve
+                                                       '''
+                                                       sleep 30
+                                                       sh 'az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing'
+                                                       sh 'kubectl apply -f deployment.yaml'
+                                                   }
+                                               }
+                                           }
+                                       }
     }
 }
