@@ -56,5 +56,32 @@ pipeline {
                 }
             }
         }
+        stage('Upload to Nexus') {
+                    steps {
+                        script {
+                            echo "Deploying to Nexus..."
+
+                            nexusArtifactUploader(
+                                nexusVersion: 'nexus3',
+                                protocol: 'http',
+                                nexusUrl: "192.168.33.11:9001",
+                                groupId: 'tn.esprit.spring',
+                                version: '1.0',
+                                repository: "maven-releases",
+                                credentialsId: "nexus_token",
+                                artifacts: [
+                                    [
+                                        artifactId: 'gestion-station-ski', // Déplacez-le ici
+                                        file: "${env.WORKSPACE}/target/5Arctic-G1-StationSKI.jar", // Chemin dynamique
+                                        type: 'jar'
+                                    ]
+                                ]
+                            )
+
+                            echo "Deployment to Nexus completed!"
+                        }
+                    }
+                }
+
     }
 }
