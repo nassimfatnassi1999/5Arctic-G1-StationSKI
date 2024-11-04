@@ -3,7 +3,6 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'sonarqube'
         SONAR_TOKEN = credentials('sonar_token')
-        IMAGE_TAG = 'latest'
         DOCKERHUB_CREDENTIALS = credentials('docker_token')
     }
 
