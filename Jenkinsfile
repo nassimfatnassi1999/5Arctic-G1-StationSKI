@@ -76,7 +76,7 @@ pipeline {
             steps {
                 echo 'Scanning Docker image with Trivy for vulnerabilities'
                 script {
-                    sh 'trivy image --severity HIGH,CRITICAL --format json -o trivy_report.json arctic-g1-stationski:latest'
+                    sh 'trivy image --severity HIGH,CRITICAL --format json -o trivy_report.json  --timeout 10m arctic-g1-stationski:latest'
                 }
             }
         }
