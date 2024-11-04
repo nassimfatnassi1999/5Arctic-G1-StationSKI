@@ -89,7 +89,7 @@ pipeline {
                    agent { label 'master' }
                    steps {
                        script {
-                           sh 'docker build -t hamdialaaeddin-arctic-g1-stationski:latest .'
+                           sh 'docker build -t hamdialaaeddin-5arctic4-g1-stationski:latest .'
                        }
                    }
                }
@@ -100,8 +100,8 @@ pipeline {
                        script {
                            withCredentials([usernamePassword(credentialsId: 'docker_token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                                sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                               sh 'docker tag hamdialaaeddin-arctic-g1-stationski:latest $DOCKER_USERNAME/hamdialaaeddin-arctic-g1-stationski:latest'
-                               sh 'docker push $DOCKER_USERNAME/hamdialaaeddin-arctic-g1-stationski:latest'
+                               sh 'docker tag hamdialaaeddin-5arctic4-g1-stationski:latest $DOCKER_USERNAME/hamdialaaeddin-5arctic4-g1-stationski:latest'
+                               sh 'docker push $DOCKER_USERNAME/hamdialaaeddin-5arctic4-g1-stationski:latest'
                            }
                        }
                    }
