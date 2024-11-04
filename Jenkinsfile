@@ -64,7 +64,7 @@ pipeline {
                             nexusArtifactUploader(
                                 nexusVersion: 'nexus3',
                                 protocol: 'http',
-                                nexusUrl: "192.168.33.11:9001",
+                                nexusUrl: "192.168.33.11:8081",
                                 groupId: 'tn.esprit.spring',
                                 version: '1.0',
                                 repository: "maven-releases",
