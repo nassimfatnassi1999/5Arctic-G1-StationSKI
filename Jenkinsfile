@@ -88,7 +88,7 @@ pipeline {
                    agent { label 'master' }
                    steps {
                        script {
-                           sh 'docker build -t hamdialaaeddin-5arctic4-g1-stationski:latest .'
+                           sh 'docker build -t hamdialaaeddin-5arctic4-g1-stationski:3.1 .'
                        }
                    }
                }
