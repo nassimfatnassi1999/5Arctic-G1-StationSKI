@@ -4,7 +4,7 @@ pipeline {
         SONARQUBE_ENV = 'sonarqube'
         DOCKER_IMAGE = 'backend-g1-stationski'
         IMAGE_TAG = 'latest'
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials')
+
 
 
     }
@@ -22,22 +22,9 @@ pipeline {
                 )
             }
         }
-
-        stage('Print Workspace Directory') {
-            steps {
-                sh 'pwd'
-            }
-        }
-
         stage('Clean and Install') {
             steps {
                 sh 'mvn clean package | tee build.log'
-            }
-        }
-
-        stage('Find JAR File') {
-            steps {
-                sh 'find . -name "*.jar"'
             }
         }
 
@@ -54,23 +41,20 @@ pipeline {
             }
         }
 
-       stage('Static Analysis SonarCloud') {
-                  agent { label 'agent1' }
-                  environment {
-                      SONAR_URL = "https://sonarcloud.io" // URL de SonarCloud
-                  }
-                  steps {
-                      withCredentials([string(credentialsId: 'sonar-cloud-credentials', variable: 'SONAR_TOKEN')]) {
-                          sh '''
-                               mvn sonar:sonar \
-                              -Dsonar.login=${SONAR_TOKEN} \
-                              -Dsonar.host.url=${SONAR_URL} \
-                              -Dsonar.java.binaries=target/classes \
-                              -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-                              -Dsonar.projectKey=5Arctic-G1-StationSKI \
-                              -Dsonar.organization=hamdialaeddin \
-                          '''
-                      }
-                  }
-              }
+      stage('SonarQube Analysis') {
+                 agent { label 'agent1' }
+                 steps {
+                     script {
+                         withSonarQubeEnv("${SONARQUBE_ENV}") {
+                             sh """
+                                 mvn sonar:sonar \
+                                 -Dsonar.login=${SONAR_TOKEN} \
+                                 -Dsonar.inclusions=src/main/java/tn/esprit/spring/services/** \
+                                 -Dsonar.test.inclusions=src/test/java/tn/esprit/spring/services/** \
+                                 -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                             """
+                         }
+                     }
+                 }
+             }
       }
