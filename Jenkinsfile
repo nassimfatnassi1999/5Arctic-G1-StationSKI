@@ -5,7 +5,7 @@ pipeline {
         SONAR_TOKEN = credentials('sonar_token')
         DOCKERHUB_CREDENTIALS = credentials('docker_token')
         DOCKER_IMAGE = 'hamdialaaeddin-5arctic4-g1-stationski'  
-        IMAGE_TAG = '3.2' 
+        IMAGE_TAG = '0.0.3' 
     }
    
 
@@ -69,7 +69,7 @@ pipeline {
                         protocol: 'http',
                         nexusUrl: "192.168.33.11:8081",
                         groupId: 'tn.esprit.spring',
-                        version: '1.1',
+                        version: '1.2',
                         repository: "maven-releases",
                         credentialsId: "nexus_token",
                         artifacts: [
@@ -92,7 +92,7 @@ pipeline {
                     def nexusUrl = "http://192.168.33.11:8081"
                     def groupId = "tn.esprit.spring"
                     def artifactId = "5Arctic-G1-StationSKI"
-                    def version = "1.1"
+                    def version = "1.2"
 
                     sh """
                         docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
@@ -105,18 +105,21 @@ pipeline {
             }
         }
         
-               stage('Push Docker Image to Docker Hub') {
-                   agent { label 'master' }
-                   steps {
-                       script {
-                           withCredentials([usernamePassword(credentialsId: 'docker_token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                               sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                               sh 'docker tag hamdialaaeddin-5arctic4-g1-stationski:3.2 $DOCKER_USERNAME/hamdialaaeddin-5arctic4-g1-stationski:3.2'
-                               sh 'docker push $DOCKER_USERNAME/hamdialaaeddin-5arctic4-g1-stationski:3.2'
-                           }
-                       }
-                   }
-               }
+               stage('Push Docker Image') {
+            agent { label 'agent1' }
+            environment {
+                DOCKER_HUB_CREDENTIALS = credentials('docker_token')
+            }
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker_token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh "docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}"
+                        sh "docker push $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
                stage('Deploy to AKS') {
                                            agent { label 'agent1' }
                                            steps {
