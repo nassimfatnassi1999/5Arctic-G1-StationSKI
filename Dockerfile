@@ -7,7 +7,7 @@ ARG GROUP_ID
 ARG ARTIFACT_ID
 ARG VERSION
 
- Construct the Nexus download URL based on these arguments
+ #Construct the Nexus download URL based on these arguments
 RUN apk add --no-cache curl && \
     curl -o app.jar "$NEXUS_URL/repository/maven-releases/$(echo $GROUP_ID | tr . /)/$ARTIFACT_ID/$VERSION/$ARTIFACT_ID-$VERSION.jar"
 
