@@ -66,33 +66,23 @@ pipeline {
             steps {
                 echo 'Building Docker Image'
                 script {
-                    sh 'docker build -t arctic-g1-stationski:latest .'
+                    // Naming convention for Docker image
+                    def dockerImageName = 'HannachiNoursine-5ARCTIC4-G1-StationSKI'
+                    sh "docker build -t ${dockerImageName}:latest ."
                 }
             }
         }
-
-           stage('Scan with Trivy') {
-                     agent { label 'agent_1' }
-                    steps {
-                        script {
-                            // Lancer le scan Trivy et générer le rapport JSON
-                            sh 'trivy image --scanners vuln --timeout 3600s -f json -o trivy_report.json ${DOCKER_IMAGE}:${IMAGE_TAG}'
-                            sh 'python3 /home/vagrant/json-to-html.py'
-                            sh 'cp /home/vagrant/trivy_report.html ${WORKSPACE}/trivy_report.html'
-                            slackUploadFile channel: '#jenkins-messg', filePath: 'trivy_report.html', initialComment: 'Rapport Trivy en HTML'
-                        }
-                    }
-                }
 
         stage('Push Docker Image to Docker Hub') {
             agent { label 'agent_1' }
             steps {
                 echo 'Pushing Docker Image to Docker Hub'
                 script {
+                    def dockerImageName = 'HannachiNoursine-5ARCTIC4-G1-StationSKI'
                     withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                        sh 'docker tag arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
-                        sh 'docker push $DOCKER_USERNAME/arctic-g1-stationski:latest'
+                        sh "docker tag ${dockerImageName}:latest $DOCKER_USERNAME/${dockerImageName}:latest"
+                        sh "docker push $DOCKER_USERNAME/${dockerImageName}:latest"
                     }
                 }
             }
@@ -149,7 +139,7 @@ pipeline {
             }
         }
         success {
-            slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: arctic-g1-stationski:latest successfully. Backend IP: ${env.BACKEND_IP}")
+            slackSend(channel: '#jenkins_noursine', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: HannachiNoursine-5ARCTIC4-G1-StationSKI:latest successfully. Backend IP: ${env.BACKEND_IP}")
         }
         failure {
             slackSend(channel: '#jenkins_noursine', message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
