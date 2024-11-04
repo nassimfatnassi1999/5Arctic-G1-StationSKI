@@ -106,7 +106,7 @@ pipeline {
         }
         
                stage('Push Docker Image') {
-            agent { label 'agent1' }
+            agent { label 'master' }
             environment {
                 DOCKER_HUB_CREDENTIALS = credentials('docker_token')
             }
