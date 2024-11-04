@@ -2,9 +2,10 @@ pipeline {
     agent { label 'agent1' }
     environment {
         SONARQUBE_ENV = 'sonarqube'
-        DOCKER_IMAGE = 'backend-g1-stationski'
+        DOCKER_IMAGE = 'hamdialaaeddin-g1-stationski'
         SONAR_TOKEN = credentials('sonar_token')
         IMAGE_TAG = 'latest'
+        DOCKERHUB_CREDENTIALS = credentials('docker-token')
     }
 
     tools {
@@ -81,6 +82,41 @@ pipeline {
                             echo "Deployment to Nexus completed!"
                         }
                     }
+                    stage('Build Docker Image') {
+                              agent { label 'master' }
+                                environment {
+
+                                    NEXUS_URL = "http://192.168.33.11:8081"
+                                    GROUP_ID = "tn.esprit.spring"
+                                    ARTIFACT_ID = "gestion-station-ski"
+                                    VERSION = "1.0"
+                                }
+                                steps {
+                                    script {
+
+                                        // Construisez l'image Docker
+                                        sh """
+                                            docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
+                                            --build-arg NEXUS_URL=${NEXUS_URL} \
+                                            --build-arg GROUP_ID=${GROUP_ID} \
+                                            --build-arg ARTIFACT_ID=${ARTIFACT_ID} \
+                                            --build-arg VERSION=${VERSION} .
+                                        """
+                                    }
+                                }
+                            }
+                             stage('Push Docker Image to Docker Hub') {
+                                        agent { label 'master' }
+                                        steps {
+                                            script {
+                                                withCredentials([usernamePassword(credentialsId: 'docker_token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                                                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                                                    sh 'docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}'
+                                                    sh 'docker push $DOCKER_USERNAME/${DOCKER_IMAGE}:${IMAGE_TAG}'
+                                                }
+                                            }
+                                        }
+                                    }
                 }
 
     }
