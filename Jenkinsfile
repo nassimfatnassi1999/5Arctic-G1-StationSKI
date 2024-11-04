@@ -5,7 +5,7 @@ pipeline {
         SONAR_TOKEN = credentials('sonar_token')
         DOCKERHUB_CREDENTIALS = credentials('docker_token')
         DOCKER_IMAGE = 'hamdialaaeddin-5arctic4-g1-stationski'  
-        IMAGE_TAG = '0.0.4' 
+        IMAGE_TAG = '0.0.5'
     }
    
 
@@ -69,7 +69,7 @@ pipeline {
                         protocol: 'http',
                         nexusUrl: "192.168.33.11:8081",
                         groupId: 'tn.esprit.spring',
-                        version: '1.3',
+                        version: '1.4',
                         repository: "maven-releases",
                         credentialsId: "nexus_token",
                         artifacts: [
@@ -92,7 +92,7 @@ pipeline {
                     def nexusUrl = "http://192.168.33.11:8081"
                     def groupId = "tn.esprit.spring"
                     def artifactId = "5Arctic-G1-StationSKI"
-                    def version = "1.3"
+                    def version = "1.4"
 
                     sh """
                         docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \

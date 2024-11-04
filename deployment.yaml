@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: station-ski-app
+  name: stationski-app
 spec:
   replicas: 1
   selector:
@@ -13,6 +13,7 @@ spec:
         app: stationski-app
     spec:
       containers:
+        # MySQL Container
         - name: mysql
           image: mysql:latest
           env:
@@ -23,33 +24,19 @@ spec:
           ports:
             - containerPort: 3306
               name: mysql-port
+
+        # Backend Container
         - name: backend
-
-          image: alaeddin1312/hamdialaaeddin-5arctic4-g1-stationski:0.0.4
-
+          image: alaeddin1312/hamdialaaeddin-5arctic4-g1-stationski:0.0.5
           env:
             - name: DATABASE_URL
               value: jdbc:mysql://mysql-service:3306/stationSki
           ports:
-            - containerPort: 9001
+            - containerPort: 9000
               name: backend-port
 
 ---
-# Service for the frontend
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-service
-spec:
-  type: LoadBalancer
-  selector:
-    app: stationski-app  # Updated to match the app label in the deployment
-  ports:
-    - protocol: TCP
-      port: 9001
-      targetPort: 9001
----
-# MySQL Service
+# Service pour mysql stationski-app
 apiVersion: v1
 kind: Service
 metadata:
@@ -57,9 +44,23 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: stationski-app  # It should select the backend container as well
+    app: stationski-app
   ports:
     - protocol: TCP
       port: 3306
       targetPort: 3306
 ---
+# Service pour stationski-app
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: stationski-app
+  ports:
+    - protocol: TCP
+      port: 9001
+      targetPort: 9001
+      name: backend
