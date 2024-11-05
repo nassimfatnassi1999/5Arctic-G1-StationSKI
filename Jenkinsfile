@@ -60,7 +60,7 @@ pipeline {
             agent { label 'agent1' }
             steps {
                 script {
-                    sh 'docker build --no-cache -t samaalimedachref-arctic-g1-stationski:latest /home/vagrant/workspace/5Arctic-G1-bakend/'
+                    sh 'docker build -t samaalimedachref-arctic-g1-stationski:latest /home/vagrant/workspace/5Arctic-G1-bakend/'
                 }
             }
         }
