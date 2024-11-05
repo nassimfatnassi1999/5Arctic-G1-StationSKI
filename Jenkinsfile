@@ -148,14 +148,14 @@ pipeline {
 post {
     success {
         slackSend(
-            channel: '#jenkins-aladin', 
+            channel: '#jenkins-alaa', 
             message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}",
             tokenCredentialId: 'slack-credentials'
         )
     }
     failure {
         slackSend(
-            channel: '#jenkins-aladin', 
+            channel: '#jenkins-alaa', 
             message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.",
             tokenCredentialId: 'slack-credentials'
         )
