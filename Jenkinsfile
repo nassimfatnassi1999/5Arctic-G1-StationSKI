@@ -32,7 +32,7 @@ pipeline {
         stage('Static Analysis SonarCloud') {
             agent { label 'agent1' }
             environment {
-                SONAR_URL = "https://sonarcloud.io" // URL de SonarCloud test webhook
+                SONAR_URL = "https://sonarcloud.io" // URL de SonarCloud test webhook test
             }
             steps {
                 withCredentials([string(credentialsId: 'sonar-cloud-credentials', variable: 'SONAR_TOKEN')]) {
