@@ -150,7 +150,8 @@ pipeline {
         script {
             slackSend(
                 channel: '#jenkins-alaa', 
-                message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}"
+                message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}",
+                tokenCredentialId: 'slack-credentials'  // Add this line for authentication
             )
         }
     }
@@ -158,9 +159,12 @@ pipeline {
         script {
             slackSend(
                 channel: '#jenkins-alaa', 
-                message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
+                message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.",
+                tokenCredentialId: 'slack-credentials'  // Add this line for authentication
             )
         }
     }
+}
+
     }
 }
