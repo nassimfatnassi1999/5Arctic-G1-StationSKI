@@ -79,31 +79,35 @@ class RegistrationServicesImplTest {
         verify(registrationRepository, times(1)).save(registration);
     }
 
-    @Test
-    void testAddRegistrationAndAssignToSkierAndCourse() {
-        Registration registration = new Registration();
-        Long numSkieur = 1L;
-        Long numCours = 2L;
-        Skier skier = new Skier();
-        skier.setNumSkier(numSkieur);
-        skier.setDateOfBirth(LocalDate.of(2005, 1, 1)); // Age < 16 for testing
-        Course course = new Course();
-        course.setNumCourse(numCours);
 
-        course.setTypeCourse(COLLECTIVE_CHILDREN);
+   @Test
+void testAddRegistrationAndAssignToSkierAndCourse() {
+    Registration registration = new Registration();
+    Long numSkieur = 1L;
+    Long numCours = 2L;
+    Skier skier = new Skier();
+    skier.setNumSkier(numSkieur);
+    skier.setDateOfBirth(LocalDate.of(2005, 1, 1)); // Age < 16 for testing
+    Course course = new Course();
+    course.setNumCourse(numCours);
+    course.setTypeCourse(COLLECTIVE_CHILDREN);
 
-        when(skierRepository.findById(numSkieur)).thenReturn(Optional.of(skier));
-        when(courseRepository.findById(numCours)).thenReturn(Optional.of(course));
-        when(registrationRepository.countByCourseAndNumWeek(course, registration.getNumWeek())); // Assuming there are 5 already
-        when(registrationRepository.save(registration)).thenReturn(registration);
-        when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(anyInt(), anyLong(), anyLong()));
+    // Mocking repository methods with return values
+    when(skierRepository.findById(numSkieur)).thenReturn(Optional.of(skier));
+    when(courseRepository.findById(numCours)).thenReturn(Optional.of(course));
+    when(registrationRepository.countByCourseAndNumWeek(course, registration.getNumWeek())).thenReturn(5); // Assuming 5 registrations
+    when(registrationRepository.save(registration)).thenReturn(registration);
+    when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(anyInt(), anyLong(), anyLong())).thenReturn(0);
 
-        Registration result = registrationServiceImpl.addRegistrationAndAssignToSkierAndCourse(registration, numSkieur, numCours);
+    // Calling the service method
+    Registration result = registrationServiceImpl.addRegistrationAndAssignToSkierAndCourse(registration, numSkieur, numCours);
 
-        assertNotNull(result);
-        assertEquals(skier, result.getSkier());
-        assertEquals(course, result.getCourse());
-        verify(registrationRepository, times(1)).save(registration);
-    }
+    // Verifying the results
+    assertNotNull(result);
+    assertEquals(skier, result.getSkier());
+    assertEquals(course, result.getCourse());
+    verify(registrationRepository, times(1)).save(registration);
+}
+
 
 }
