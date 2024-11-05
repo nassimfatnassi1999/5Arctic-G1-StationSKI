@@ -80,7 +80,7 @@ class RegistrationServicesImplTest {
     }
 
 
-   @Test
+@Test
 void testAddRegistrationAndAssignToSkierAndCourse() {
     Registration registration = new Registration();
     Long numSkieur = 1L;
@@ -92,12 +92,12 @@ void testAddRegistrationAndAssignToSkierAndCourse() {
     course.setNumCourse(numCours);
     course.setTypeCourse(COLLECTIVE_CHILDREN);
 
-    // Mocking repository methods with return values
+    // Mocking repository methods with Long values in thenReturn
     when(skierRepository.findById(numSkieur)).thenReturn(Optional.of(skier));
     when(courseRepository.findById(numCours)).thenReturn(Optional.of(course));
-    when(registrationRepository.countByCourseAndNumWeek(course, registration.getNumWeek())).thenReturn(5); // Assuming 5 registrations
+    when(registrationRepository.countByCourseAndNumWeek(course, registration.getNumWeek())).thenReturn(5L); // Assuming 5 registrations
     when(registrationRepository.save(registration)).thenReturn(registration);
-    when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(anyInt(), anyLong(), anyLong())).thenReturn(0);
+    when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(anyInt(), anyLong(), anyLong())).thenReturn(0L);
 
     // Calling the service method
     Registration result = registrationServiceImpl.addRegistrationAndAssignToSkierAndCourse(registration, numSkieur, numCours);
