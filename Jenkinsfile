@@ -147,10 +147,10 @@ pipeline {
 
  post {
         success {
-            slackSend(channel: '#jenkins_alaa', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: hamdialaaeddin-5arctic4-g1-stationski:latest successfully. ")
+            slackSend(channel: '#jenkins-alaa', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: hamdialaaeddin-5arctic4-g1-stationski:latest successfully. ")
         }
         failure {
-            slackSend(channel: '#jenkins_alaa', message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
+            slackSend(channel: '#jenkins-alaa', message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
         }
     }
 }
