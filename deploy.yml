@@ -24,7 +24,7 @@ spec:
             - containerPort: 3306
               name: mysql-port
         - name: backend
-          image: mohammedachref/samaalimedachref-arctic-g1-stationski:0.0.4
+          image: mohammedachref/samaalimedachref-arctic-g1-stationski:0.0.5
           env:
             - name: DATABASE_URL
               value: jdbc:mysql://localhost:3306/stationSki
