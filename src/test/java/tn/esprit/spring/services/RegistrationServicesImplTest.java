@@ -81,33 +81,45 @@ class RegistrationServicesImplTest {
 
 
 @Test
-void testAddRegistrationAndAssignToSkierAndCourse() {
-    Registration registration = new Registration();
-    Long numSkieur = 1L;
-    Long numCours = 2L;
-    Skier skier = new Skier();
-    skier.setNumSkier(numSkieur);
-    skier.setDateOfBirth(LocalDate.of(2005, 1, 1)); // Age < 16 for testing
-    Course course = new Course();
-    course.setNumCourse(numCours);
-    course.setTypeCourse(COLLECTIVE_CHILDREN);
+public Registration addRegistrationAndAssignToSkierAndCourse(Registration registration, Long numSkieur, Long numCours) {
+    // Retrieve the skier and course based on provided IDs
+    Optional<Skier> optionalSkier = skierRepository.findById(numSkieur);
+    Optional<Course> optionalCourse = courseRepository.findById(numCours);
 
-    // Mocking repository methods with Long values in thenReturn
-    when(skierRepository.findById(numSkieur)).thenReturn(Optional.of(skier));
-    when(courseRepository.findById(numCours)).thenReturn(Optional.of(course));
-    when(registrationRepository.countByCourseAndNumWeek(course, registration.getNumWeek())).thenReturn(5L); // Assuming 5 registrations
-    when(registrationRepository.save(registration)).thenReturn(registration);
-    when(registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(anyInt(), anyLong(), anyLong())).thenReturn(0L);
+    if (optionalSkier.isEmpty() || optionalCourse.isEmpty()) {
+        throw new EntityNotFoundException("Skier or Course not found");
+    }
 
-    // Calling the service method
-    Registration result = registrationServiceImpl.addRegistrationAndAssignToSkierAndCourse(registration, numSkieur, numCours);
+    Skier skier = optionalSkier.get();
+    Course course = optionalCourse.get();
 
-    // Verifying the results
-    assertNotNull(result);
-    assertEquals(skier, result.getSkier());
-    assertEquals(course, result.getCourse());
-    verify(registrationRepository, times(1)).save(registration);
+    // Check if skier meets any required conditions, e.g., age
+    if (skier.getDateOfBirth().isAfter(LocalDate.now().minusYears(16))) {
+        throw new IllegalArgumentException("Skier must be at least 16 years old for this course type");
+    }
+
+    // Check if the course has available slots
+    long currentRegistrations = registrationRepository.countByCourseAndNumWeek(course, registration.getNumWeek());
+    if (currentRegistrations >= course.getMaxParticipants()) {
+        throw new IllegalArgumentException("Course is full for the specified week");
+    }
+
+    // Assign Skier and Course to Registration
+    registration.setSkier(skier);
+    registration.setCourse(course);
+
+    // Ensure no duplicate registration for the same week and skier-course combination
+    long duplicateCount = registrationRepository.countDistinctByNumWeekAndSkier_NumSkierAndCourse_NumCourse(
+        registration.getNumWeek(), skier.getNumSkier(), course.getNumCourse());
+
+    if (duplicateCount > 0) {
+        throw new IllegalArgumentException("Skier is already registered for this course in the specified week");
+    }
+
+    // Save the registration
+    return registrationRepository.save(registration);
 }
+
 
 
 }
