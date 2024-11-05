@@ -145,22 +145,12 @@ pipeline {
                                            }
                } }
 
-          post {
-    success {
-        script {
-            slackSend(
-                channel: '#jenkins-messg', 
-                message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully. Backend IP: ${env.BACKEND_IP}"
-            )
+ post {
+        success {
+            slackSend(channel: '#jenkins_alaa', message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: hamdialaaeddin-5arctic4-g1-stationski:latest successfully. ")
         }
-    }
-    failure {
-        script {
-            slackSend(
-                channel: '#jenkins-messg', 
-                message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
-            )
+        failure {
+            slackSend(channel: '#jenkins_alaa', message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
         }
-    }
     }
 }
