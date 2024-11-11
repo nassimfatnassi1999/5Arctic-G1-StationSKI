@@ -73,13 +73,13 @@ pipeline {
             }
         }
 
-         stage('Scan with Trivy') {
+       /*  stage('Scan with Trivy') {
                      agent { label 'agent_1' }
                     steps {
-                    echo 'Cloning the GitHub repository'
+
 
                     }
-                }
+                }*/
 
         stage('Push Docker Image to Docker Hub') {
             agent { label 'agent_1' }
