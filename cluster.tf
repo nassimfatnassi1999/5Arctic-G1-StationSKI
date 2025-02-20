@@ -1,6 +1,6 @@
 provider "azurerm" {
   features {}
-  subscription_id = "66f6be63-a7b6-4a6b-98f9-3d42fe1d31d1"  
+  subscription_id = ""  
 }
 
 resource "azurerm_resource_group" "myterraformgroup" {
