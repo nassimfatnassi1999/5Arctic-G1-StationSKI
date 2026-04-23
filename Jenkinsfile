@@ -8,7 +8,6 @@ pipeline {
     }*/
     stages {
         stage('Checkout GIT') {
-            agent { label 'master' }
             steps {
                 echo 'Pulling from Git...'
                 git branch: 'SamaaliMedAchref-G1-StationSKI',
