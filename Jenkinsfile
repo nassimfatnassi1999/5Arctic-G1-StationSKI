@@ -1,11 +1,11 @@
 pipeline {
     agent any
 
-    environment {
+   /* environment {
        // SONARQUBE_ENV = 'SonarQube'
       // SONAR_TOKEN = credentials('sonarToken')
      //  DOCKERHUB_CREDENTIALS = credentials('docker-hub')
-    }
+    }*/
     stages {
         stage('Checkout GIT') {
             agent { label 'master' }
