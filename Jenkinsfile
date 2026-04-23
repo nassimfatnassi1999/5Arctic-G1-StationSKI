@@ -16,7 +16,6 @@ pipeline {
         }
 
         stage('clean build && Unit Tests ') {
-            agent { label 'master' }
             steps {
                 script {
                     sh 'mvn clean install'
