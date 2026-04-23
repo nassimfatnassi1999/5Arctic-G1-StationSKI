@@ -2,11 +2,10 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE_ENV = 'SonarQube'
-        SONAR_TOKEN = credentials('sonarToken')
-        DOCKERHUB_CREDENTIALS = credentials('docker-hub')
+       // SONARQUBE_ENV = 'SonarQube'
+      // SONAR_TOKEN = credentials('sonarToken')
+     //  DOCKERHUB_CREDENTIALS = credentials('docker-hub')
     }
-
     stages {
         stage('Checkout GIT') {
             agent { label 'master' }
@@ -26,7 +25,7 @@ pipeline {
             }
         }
 
-       stage('SonarQube Analysis') {
+     /*  stage('SonarQube Analysis') {
            agent { label 'master' }
            steps {
                script {
@@ -41,10 +40,10 @@ pipeline {
                    }
                }
            }
-       }
+       }*/
 
 
-
+/*
          stage('Deploy to Nexus') {
                     agent { label 'agent1' } // Utiliser agent1 pour cette étape
                     steps {
@@ -54,10 +53,9 @@ pipeline {
                             sh 'mvn deploy -DskipTests=true -Dnexus.username=$NEXUS_USER -Dnexus.password=$NEXUS_PASS'
                         }
                     }
-                }
+                }*/
 
-        stage('Build Docker Image') {
-            agent { label 'agent1' }
+      /*  stage('Build Docker Image') {
             steps {
                 script {
                     sh 'docker build --no-cache -t arctic-g1-stationski:latest /home/vagrant/workspace/5Arctic-G1-bakend/'
@@ -76,8 +74,8 @@ pipeline {
                     }
                 }
             }
-        }
-      stage('Trivy Security Scan') {
+        }*/
+    /*  stage('Trivy Security Scan') {
            agent { label 'agent1' }
            steps {
                script {
@@ -85,11 +83,11 @@ pipeline {
                    sh "trivy image  mohammedachref/arctic-g1-stationski:latest >scanImage.txt"
                }
            }
-       }
+       }*/
 
 
-        stage('Deploy to AKS') {
-            agent { label 'agent1' }
+      /*  stage('Deploy to AKS') {
+
             steps {
                 script {
                     def clusterExists = sh(script: 'kubectl get nodes', returnStatus: true) == 0
@@ -110,7 +108,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
     /*    stage('Monitor with Prometheus') {
             agent { label 'agent1' }
             steps {
@@ -134,7 +132,7 @@ pipeline {
 
     }
 
-    post {
+  /*  post {
         success {
             script {
                 slackSend(channel: '#jenkins-achref',
@@ -147,5 +145,5 @@ pipeline {
                           message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}.")
             }
         }
-    }
+    }*/
 }
