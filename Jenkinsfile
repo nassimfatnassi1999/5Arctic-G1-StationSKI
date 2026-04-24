@@ -53,14 +53,14 @@ pipeline {
                     }
                 }*/
 
-      /*  stage('Build Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
                     sh 'docker build --no-cache -t arctic-g1-stationski:latest /home/vagrant/workspace/5Arctic-G1-bakend/'
                 }
             }
         }
-
+/*
         stage('Push Docker Image to Docker Hub') {
             agent { label 'agent1' }
             steps {
