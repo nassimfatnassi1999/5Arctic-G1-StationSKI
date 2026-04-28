@@ -56,7 +56,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build --no-cache -t arctic-g1-stationski:latest /home/vagrant/workspace/5Arctic-G1-bakend/'
+                    sh 'docker build --no-cache -t arctic-g1-stationski:latest'
                 }
             }
         }
