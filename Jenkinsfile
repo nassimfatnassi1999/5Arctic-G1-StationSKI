@@ -56,7 +56,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build --no-cache -t arctic-g1-stationski:latest'
+                    sh 'docker build --no-cache -t arctic-g1-stationski:latest .'
                 }
             }
         }
