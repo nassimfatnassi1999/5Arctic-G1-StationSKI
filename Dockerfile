@@ -1,12 +1,7 @@
 # Utilise une image officielle Java Runtime comme image de base
-FROM eclipse-temurin:17-jre-jammy
+FROM alpine:3.18
 
-# Fixe le répertoire de travail
-WORKDIR /app
-
-# Installe curl pour télécharger le fichier JAR
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-
+RUN apk add openjdk17-jre
 # Télécharge le .jar depuis Nexus
 #RUN curl -f -o app.jar "http://192.168.33.11:8081/repository/maven-releases/tn/esprit/spring/gestion-station-ski/1.0/gestion-station-ski-1.0.jar"
 
