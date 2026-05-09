@@ -1,11 +1,11 @@
 pipeline {
     agent any
 
-   /* environment {
+    environment {
        // SONARQUBE_ENV = 'SonarQube'
       // SONAR_TOKEN = credentials('sonarToken')
-     //  DOCKERHUB_CREDENTIALS = credentials('docker-hub')
-    }*/
+       DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+    }
     stages {
         stage('Checkout GIT') {
             steps {
@@ -60,19 +60,19 @@ pipeline {
                 }
             }
         }
-/*
+
         stage('Push Docker Image to Docker Hub') {
-            agent { label 'agent1' }
+
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                         sh 'docker tag arctic-g1-stationski:latest $DOCKER_USERNAME/arctic-g1-stationski:latest'
                         sh 'docker push $DOCKER_USERNAME/arctic-g1-stationski:latest'
                     }
                 }
             }
-        }*/
+        }
     /*  stage('Trivy Security Scan') {
            agent { label 'agent1' }
            steps {
